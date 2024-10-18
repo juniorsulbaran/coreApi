@@ -1,0 +1,95 @@
+<style>
+    /* Estilos para el modal */
+    .modal {
+      display: none; /* Ocultar el modal por defecto */
+      position: fixed; /* Posición fija */
+      z-index: 1; /* Por encima de todo */
+      left: 0;
+      top: 0;
+      width: 100%;
+      height: 100%;
+      overflow: auto; /* Habilitar desplazamiento si es necesario */
+      background-color: rgba(0, 0, 0, 0.5); /* Fondo semitransparente */
+    }
+    
+    .modal-contenido {
+      background-color: #fefefe;
+      margin: 15% auto; /* Centrar vertical y horizontalmente */
+      padding: 20px;
+      border: 1px solid #888;
+      width: 80%;
+    }
+    
+    .cerrar {
+      color: #aaa;
+      float: right;
+      font-size: 28px;
+      font-weight: bold;
+    }
+    
+    .cerrar:hover,
+    .cerrar:focus {
+      color: black;
+      text-decoration: none;
+      cursor: pointer;
+    }
+
+    .centerBoton {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+    }
+</style>
+
+<div id="container" class="container">
+    <div class="col-md-10"> 
+        <div class="card"> 
+            <div class="card-body">
+                <h1>Compra Rechazada</h1>
+                <p>
+                    Estimado/a Cliente,
+                    Lamentamos informarte que la compra de tu boleto de bingo ha sido rechazada. Desafortunadamente, otro comprador ya adquirio el boleto y no hemos podido completar la compra en este momento.
+                    Te pedimos disculpas por las molestias ocasionadas y te invitamos a realzar una nueva compra de boleto.
+
+                    Gracias por tu comprensión.
+                </p>
+                <div id='validacionCompra' style="display:none;">
+                    <button type="button" id="home"  class="btn btn-primary btn-sm text-center">Inicio</button>
+                    <button type="button" id="listacartones1" class="btn btn-primary btn-sm text-center">Cartones</button>
+                </div>
+            </div>
+        </div> 
+    </div>   
+</div>
+<script>
+// Obtener elementos del DOM
+var modaldatos = document.getElementById('pagoMovil');
+var btnAbrir = document.getElementById('datosPago');
+var btnCerrar = document.getElementById('cerrarModalPago');
+var btnHome = document.getElementById('home');
+var btnListaCartones = document.getElementById('listacartones1');
+
+// listamos los cartones
+btnListaCartones.onclick = function(){
+    listarCartones()
+}
+// redireccionar al home
+btnHome.onclick = function(){
+    window.location.href = "/";
+}
+// Asociar evento de clic al botón de abrir
+btnAbrir.onclick = function(){
+    modaldatos.style.display = 'block';
+}
+// Asociar evento de clic al botón de cerrar
+btnCerrar.onclick = function() {
+    modaldatos.style.display = 'none';
+}
+// Cerrar el modal si el usuario hace clic fuera de él
+window.onclick = function(event) {
+  if (event.target == modaldatos) {
+    modaldatos.style.display = 'none';
+  }
+}
+</script>
+

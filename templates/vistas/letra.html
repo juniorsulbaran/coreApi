@@ -1,0 +1,96 @@
+<style>
+    .degradado {
+        width: 260px;
+        height: auto;
+        border: 10px solid; /* Grosor del borde */
+        border-image: linear-gradient(to right, gray, white) 1;
+        box-sizing: border-box; /* Asegura que el padding y el borde se incluyan en el tamaño total */
+        background-color: white; /* Color de fondo del div */
+    }
+    .degradado-resultado{
+        width: 100px;
+        height: 80px;
+        border: 10px solid; /* Grosor del borde */
+        border-image: linear-gradient(to right, gray, white) 1;
+        box-sizing: border-box; /* Asegura que el padding y el borde se incluyan en el tamaño total */
+        background-color: white; /* Color de fondo del div */ 
+    }
+    
+    .card-img-top {
+        width: 260px;
+        height: auto;
+    }
+    
+
+    .card-img-logo{
+        width: 60px;
+        height: 39px; 
+    }
+
+    .cintillo {
+        white-space: nowrap; /* Evita el salto de línea */
+        animation: mover 15s linear infinite; /* Animación continua */
+        font-size: 18px;
+        background-color: #4CAF50; /* Color de fondo */
+        color: white; /* Color del texto */
+        padding: 0px;
+        width:1000px;
+    }
+    
+    @keyframes mover {
+        0% {
+            transform: translateX(100%); /* Comienza fuera de la pantalla a la derecha */
+        }
+        100% {
+            transform: translateX(-100%); /* Termina fuera de la pantalla a la izquierda */
+        }
+    }
+</style>
+<div id="container" class="container">
+    <div class="col">
+        <div class="card custom-color ">
+            <div class="card-body d-flex justify-content-center align-items-center">
+                <div class="row">
+                    <div class="col">
+                        <div class="row">
+                            <div class="col">
+                                <h3 id="cantado">Sorteo LottoABC</h3>
+                                <div class="degradado">
+                                    <img id='lotto' src="{{ url_for('static', filename='image/letra.gif') }}" class="card-img-top" alt="...">
+                                </div>
+                            </div>    
+                            <div class="col">
+                                <br>
+                                <h4 id="cantado">Resultado LottoABC</h4>
+                                {% if listarResultadoLetra =='Sin resultados' %}
+                                    <div id="fila-contenido" class="row">
+                                        <div class="col">
+                                            <strong>No hay resultados</strong> 
+                                        </div>
+                                    </div>
+                                {% else %}
+                                    <div id="fila-contenido" class="row">
+                                        <div class="col">       
+                                        </div>  
+                                    </div>   
+                                {% endif %}
+                                </div>         
+                            </div>
+                            <div class="col">
+                                
+                            </div>
+                        </div>   
+                    </div>     
+                </div>
+            </div>
+        </div>
+        <br> 
+    </div>
+    <div class="row">     
+        <div class="col">
+            <div class="cintillo">
+                <p>¡Bienvenido a nuestro sitio web! Apuestas y Ganas Seguro   / Proximo sorteo 10:00:00 AM</p>
+            </div> 
+        </div>
+    </div>
+</div>
