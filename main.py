@@ -19,15 +19,11 @@ from datetime import datetime, timedelta
 sorteoletra = ''
 # Definir la zona horaria de Venezuela
 tz_venezuela = pytz.timezone('America/Caracas')
-
 # Obtener la hora actual en Venezuela
 hora_actual_venezuela = datetime.now(tz_venezuela)
 print("La hora actual en Venezuela es:", hora_actual_venezuela.strftime('%d-%m-%Y %H:%M:%S'))
-
-
 # Definir la zona horaria de Colombia
 tz_colombia = pytz.timezone('America/Bogota')
-
 # Obtener la hora actual en Colombia
 hora_actual_colombia = datetime.now(tz_colombia)
 print("La hora actual en Colombia  es:", hora_actual_colombia.strftime('%d-%m-%Y %H:%M:%S'))
