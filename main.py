@@ -9,11 +9,10 @@ from generarCartonBingo import matriz
 from consultasdb import *
 from dotenv import load_dotenv
 import os
-from conexiones import conectar_base_datos
+from conexiones import conectar_base_datos 
 from bolRandom import cantarBola
 from letraRandom import cantarLetra
 import threading
-
 import pytz
 from datetime import datetime, timedelta
 
