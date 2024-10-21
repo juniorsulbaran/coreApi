@@ -15,6 +15,7 @@ from letraRandom import cantarLetra
 import threading
 import pytz
 from datetime import datetime, timedelta
+
 #variables sorteo letra
 sorteoletra = ''
 # Definir la zona horaria de Venezuela
