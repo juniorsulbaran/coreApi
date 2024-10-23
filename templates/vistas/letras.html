@@ -42,54 +42,117 @@
 
     .card-img-logo{
         width: 80px;
-        height: 80px; 
+        height: 80px;
+        border: 1px solid #d0d0d0; /* Borde delgado */
+        background-color: #f0f0f0; /* Color de fondo */
+        box-shadow: 2px 2px 5px rgba(0, 0, 0, 0.3), -2px -2px 5px rgba(255, 255, 255, 0.7); /* Sombra para efecto 4D */
+        border-radius: 5px; /* Esquinas redondeadas opcional */        
     }
+
+    .cuadro-4d {
+        margin-left:1%%;
+        align: center ;
+        width: 82px; /* Ancho del cuadro */
+        height: 82px; /* Alto del cuadro */
+        border: 1px solid #d0d0d0; /* Borde delgado */
+        background-color: #f0f0f0; /* Color de fondo */
+        box-shadow: 2px 2px 5px rgba(0, 0, 0, 0.3), -2px -2px 5px rgba(255, 255, 255, 0.7); /* Sombra para efecto 4D */
+        border-radius: 5px; /* Esquinas redondeadas opcional */
+    }
+    .boton {
+        background-color: #99c3ee; /* Color de fondo inicial */
+        color: white; /* Color del texto */
+        border: none; /* Sin borde */
+        padding: 10px 20px; /* Espaciado interno */
+        font-size: 16px; /* Tamaño de fuente */
+        cursor: pointer; /* Cambia el cursor al pasar sobre el botón */
+        transition: background-color 0.3s ease; /* Transición suave para el cambio de color */
+        border-radius: 5px; /* Bordes redondeados */
+    }
+    
+    .boton:active {
+        background-color: #007bff; /* Color gris al presionar */
+    }
+
+    .modal-backdrop {
+        display: none; /* Esto oculta el fondo oscuro */
+    }
+
 </style>
 
 <div id="container" class="container">
     <div class="card">
+        {% for i in range(0, opciones|length, 3) %}
         <div class="row">
             <div class="col-4">
-                <img  src="{{ url_for('static', filename='image/logo.png') }}" class="card-img-logo" alt="...">
+                <img src="{{ url_for('static', filename='image/letras/' + opciones[i][2] + '.png') }}" 
+                     class="card-img-logo cuadro-4d btn btn-primary"  
+                     onclick="compraOpcion('{{ opciones[i][0] }}', '{{ opciones[i][2] }}')" 
+                     alt="...">         
             </div>
-            <div class="col-4">
-                <img  src="{{ url_for('static', filename='image/logo.png') }}" class="card-img-logo" alt="...">
-            </div>
-            <div class="col-4">
-                <img  src="{{ url_for('static', filename='image/logo.png') }}" class="card-img-logo" alt="...">
-            </div>
-        </div> 
+            {% if i + 1 < opciones|length %}
+                <div class="col-4">
+                    <img src="{{ url_for('static', filename='image/letras/' + opciones[i + 1][2] + '.png') }}" 
+                         class="card-img-logo cuadro-4d btn btn-primary" 
+                         onclick="compraOpcion('{{ opciones[i + 1][0] }}', '{{ opciones[i + 1][2] }}')"  
+                         alt="...">   
+                </div>
+            {% endif %}
+            {% if i + 2 < opciones|length %}
+                <div class="col-4"> 
+                    <img src="{{ url_for('static', filename='image/letras/' + opciones[i + 2][2] + '.png') }}" 
+                         class="card-img-logo cuadro-4d btn btn-primary"  
+                         onclick="compraOpcion('{{ opciones[i + 2][0] }}', '{{ opciones[i + 2][2] }}')" 
+                         alt="...">  
+                </div>
+            {% endif %}
+        </div>
+        <br>
+        {% endfor %}
     </div>
-</div>   
-<script>
-// Obtener elementos del DOM
-var modaldatos = document.getElementById('pagoMovil');
-var btnAbrir = document.getElementById('datosPago');
-var btnCerrar = document.getElementById('cerrarModalPago');
-var btnHome = document.getElementById('home');
-var btnListaCartones = document.getElementById('listacartones');
+</div>    
+    <!-- Modal -->
+    <div class="modal fade" id="miModal" tabindex="-1" aria-labelledby="miModalLabel" aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="miModalLabel">Confirmación de Compra</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body" id="modalBody">
+                    <p>Esta seguro que desea comprar la Opción?</p>
+                    <!-- Contenido dinámico se añadirá aquí -->
+                    <img id='lotto'  class="card-img-top" alt="...">
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cerrar</button>
+                    <button type="button" class="btn btn-primary" id="confirmarCompra">Confirmar Compra</button>
+                </div>
+            </div>
+        </div>
+    </div>
+    
+    <script>
+        function compraOpcion(opcionId, opcionNombre) {
+            // Actualiza el contenido del modal
+            //document.getElementById('modalBody').innerText = "¿Estás seguro de que deseas comprar la opción: " + opcionNombre +"?";
+            // Crear un elemento de imagen
+            const imagen = document.getElementById('lotto');
+            imagen.src = 'static/image/letras/'+opcionNombre+'.png'; // Reemplaza con la nueva ruta de la imagen
 
-// listamos los cartones
-btnListaCartones.onclick = function(){
-    listarCartones()
-}
-// redireccionar al home
-btnHome.onclick = function(){
-    window.location.href = "/";
-}
-// Asociar evento de clic al botón de abrir
-btnAbrir.onclick = function(){
-    modaldatos.style.display = 'block';
-}
-// Asociar evento de clic al botón de cerrar
-btnCerrar.onclick = function() {
-    modaldatos.style.display = 'none';
-}
-// Cerrar el modal si el usuario hace clic fuera de él
-window.onclick = function(event) {
-  if (event.target == modaldatos) {
-    modaldatos.style.display = 'none';
-  }
-}
-</script>
+            // Crea una instancia del modal
+            var miModal = new bootstrap.Modal(document.getElementById('miModal'));
+            
+            // Muestra el modal
+            miModal.show();
+            
+            // Agrega un evento al botón de confirmar compra
+            document.getElementById('confirmarCompra').onclick = function() {
+                // Aquí puedes implementar la lógica para confirmar la compra
+                console.log("Compra confirmada:", opcionId, opcionNombre);
+                alert("Has confirmado la compra de: " + opcionNombre + " (ID: " + opcionId + ")");
+                miModal.hide(); // Cierra el modal después de confirmar
+            };
+        }
+    </script>
 

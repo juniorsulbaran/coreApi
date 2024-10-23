@@ -329,3 +329,21 @@ def sorteopendiente():
     result = mycursor.fetchall()
     mydb.close
     return result
+
+def opcionesJuego():
+    mydb = conectar_base_datos()
+    mycursor = mydb.cursor()
+    mycursor.execute("SELECT * FROM opcionesjuegos" )
+    result = mycursor.fetchall()
+    mydb.close
+    dicletra=''
+    opciones=[]
+    for items in result:
+        dicletra = {
+            'id': items[0],
+            'idJuegos': items[1],
+            'nombre': items[2]
+        }
+        opciones.append(dicletra)
+    print(opciones)
+    return result

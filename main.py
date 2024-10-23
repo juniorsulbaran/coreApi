@@ -622,8 +622,9 @@ def listarCartonesPremiados():
 
 @app.route('/listaLetra', methods=['POST'])
 def listaLetra():
-    print('Estoy aqui')
-    return render_template('vistas/letras.html')
+    opciones = opcionesJuego()
+    #print('Opciones Juegos: ', opciones)
+    return render_template('vistas/letras.html',opciones=opciones)
  
 @app.route('/listarCartones', methods=['POST'])
 def listarCartones():
