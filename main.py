@@ -60,11 +60,20 @@ def sorteoLotto(sorteoletra,nowDate):
     letra = cantarLetra()
     guardarLetra = guardoLetraGanadora(letra,sorteoletra,nowDate)
     listarResultadoLetra = resultadoLetra(nowDate)
+    #Logica para actualizar sorteo disponible ################################
+    #sorteoNuevo = 1
+    #pote = sorteopendiente()
+    #montoPote = pote[0][1]
+    #sorteoTaquilla = BuscarSorteo(sorteoNuevo)
+    #actualizoSorteo = updateSorteo(horaSorteo,montoPote,sorteoTaquilla[0][0])
+    #print('actualizo proximo',actualizoSorteo)
+    ##########################################################################
+    
     emit('lotto', letra, broadcast=True)
     emit('resultadoLetraFecha', listarResultadoLetra, broadcast=True)
     print(' Lista resultado Letra: ', listarResultadoLetra) 
     
-#iniciamos el dorteo
+#iniciamos el sorteo
 def recibir_mensaje(msg,pote,nowDate):
     print('Sorteo De: ' + msg)
     print('pote: ', pote)
@@ -513,6 +522,7 @@ def hora(iniciar):
         if hora_actual == '19:30:00':
             sorteoletra = '07:30:00'
             sorteoLotto(sorteoletra,nowDate)
+
         if hora_actual == '19:35:00':
             sorteoletra = '07:35:00'
             sorteoLotto(sorteoletra,nowDate)

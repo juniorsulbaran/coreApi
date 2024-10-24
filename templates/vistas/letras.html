@@ -59,6 +59,18 @@
         box-shadow: 2px 2px 5px rgba(0, 0, 0, 0.3), -2px -2px 5px rgba(255, 255, 255, 0.7); /* Sombra para efecto 4D */
         border-radius: 5px; /* Esquinas redondeadas opcional */
     }
+
+    .cuadro-4d-a {
+        margin-left:1%;
+        align: center ;
+        width: auto; /* Ancho del cuadro */
+        height: auto; /* Alto del cuadro */
+        border: 1px solid #d0d0d0; /* Borde delgado */
+        background-color: #f0f0f0; /* Color de fondo */
+        box-shadow: 2px 2px 5px rgba(0, 0, 0, 0.3), -2px -2px 5px rgba(255, 255, 255, 0.7); /* Sombra para efecto 4D */
+        border-radius: 5px; /* Esquinas redondeadas opcional */
+    }
+
     .boton {
         background-color: #99c3ee; /* Color de fondo inicial */
         color: white; /* Color del texto */
@@ -127,7 +139,7 @@
         {% endfor %}
     </div>
 </div>    
-    <!-- Modal -->
+    <!-- Modal Selecionar Opcion de juego -->
     <div class="modal fade" id="miModal" tabindex="-1" aria-labelledby="miModalLabel" aria-hidden="true">
         <div class="modal-dialog">
             <div class="modal-content">
@@ -158,7 +170,6 @@
                                     {% endfor %}
                                 </select>
                             </div>
-                            
                             <div class="col-4">
                                 <input type="text" name="monto" id="monto" class="form-control" value="40 bs." readonly />
                             </div> 
@@ -168,6 +179,68 @@
                 <div class="modal-footer">
                     <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cerrar</button>
                     <button type="button" class="btn btn-primary" id="confirmarCompra">Confirmar Compra</button>
+                </div>
+            </div>
+        </div>
+    </div>
+    <!-- Modal Selecionar Opcion de juego -->
+    <div class="modal fade" id="modalTicket" tabindex="-1" aria-labelledby="miModalLabel" aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="miModalLabel">Procesar Pago</h5>
+                        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                    </div>
+                    <div class="modal-body" id="modalBody">   
+                        <div class="card cuadro-4d-a"> 
+                            <div class="container mt-5">
+                                <div class="card text-center">
+                                    <div class="card-body">
+                                        <div class="row justify-content-center">
+                                            <p>Por Favor realizar pago Movil?</p>
+                                        </div>
+                                        <div class="row justify-content-center">
+                                            <div class="col-auto">
+                                                <p><strong>Banco:</strong></p>
+                                            </div>
+                                            <div class="col-auto">
+                                                <p>Banesco</p>
+                                            </div>
+                                        </div>
+                                        <div class="row justify-content-center">
+                                            <div class="col-auto">
+                                                <p><strong>Cedula:</strong></p>
+                                            </div>
+                                            <div class="col-auto">
+                                                <p>40.567.987</p>
+                                            </div>
+                                        </div>
+                                        <div class="row justify-content-center">
+                                            <div class="col-auto">
+                                                <p><strong>Número Celular:</strong></p>
+                                            </div>
+                                            <div class="col-auto">
+                                                <p>0412 993 5467</p>
+                                            </div>
+                                        </div>
+                                        <div class="row justify-content-center">
+                                            <div class="col-auto">
+                                                <label for="referencia" class="form-label">Referencia:</label>
+                                                <input type="text" id="referencia" class="form-control" placeholder="Ingrese Numero De Referencia" />
+                                            </div>
+                                        </div>
+                                        
+                                    </div>
+                                </div>
+                            </div>
+                            <br>
+                            <br> 
+                        </div>
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cerrar</button>
+                        <button type="button" class="btn btn-primary" id="procesarCompra">Procesar Compra</button>
+                    </div>
                 </div>
             </div>
         </div>
@@ -183,7 +256,8 @@
 
             // Crea una instancia del modal
             var miModal = new bootstrap.Modal(document.getElementById('miModal'));
-            
+            // Crea una instancia del modal
+            var modalTicket = new bootstrap.Modal(document.getElementById('modalTicket'));
             // Muestra el modal
             miModal.show();
 
@@ -191,7 +265,16 @@
             document.getElementById('confirmarCompra').onclick = function() {
                 // Aquí puedes implementar la lógica para confirmar la compra
                 console.log("Compra confirmada:", opcionId, opcionNombre);
-                alert("Has confirmado la compra de: " + opcionNombre + " (ID: " + opcionId + ")");
+                //alert("Has confirmado la compra de: " + opcionNombre + " (ID: " + opcionId + ")");
+                modalTicket.show(); //Este modal mostrara el ticket detallado para capturar.
+            };
+
+            // Agrega un evento al botón de confirmar compra
+            document.getElementById('procesarCompra').onclick = function() {
+                // Aquí puedes implementar la lógica para confirmar la compra
+                console.log("Compra Procesada:", opcionId, opcionNombre);
+                //alert("Has confirmado la compra de: " + opcionNombre + " (ID: " + opcionId + ")");
+                modalTicket.hide(); //Este modal mostrara el ticket detallado para capturar.
                 miModal.hide(); // Cierra el modal después de confirmar
             };
         }
