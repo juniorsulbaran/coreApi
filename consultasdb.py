@@ -29,8 +29,10 @@ def resultadoLetra(nowDate):
     result = mycursor.fetchall()
     mydb.close
     if result ==[]:
-        result = "Sin resultados" 
-    print('primer: ',result)
+        result = {
+            'resultado':'Sin resultados'
+            } 
+    print('primer: ',result['resultado'])
     return result
 
 
@@ -304,13 +306,23 @@ def sorteoReprogramado(sorteoTaquilla,pote):
         return 'Sorteos Actualizado'
     
 #conulto el nuevo sorteo para enviar a la taquilla
-def BuscarSorteo(sorteoNuevo):
+def BuscarSorteo():
     mydb = conectar_base_datos()
     mycursor = mydb.cursor()
-    mycursor.execute("SELECT horaSorteo FROM sorteos WHERE id = '%s'" % sorteoNuevo)
+    mycursor.execute("SELECT * FROM sorteos")
     result = mycursor.fetchall()
     mydb.close
-    return result
+    dicSorteo=''
+    ListaSorteo=[]
+    print(result)
+    for items in result:
+        dicSorteo = {
+            'id': items[0],
+            'sorteo': items[1],
+            'status': items[2]
+        }
+        ListaSorteo.append(dicSorteo)
+    return ListaSorteo
 
 #Consultamos la tabla numero unico por si hay sorteo activo
 def numerosSorteo():

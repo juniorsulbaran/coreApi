@@ -314,16 +314,16 @@ socket.on('bingo',(msg) =>{
 });
 
 socket.on('resultadoLetraFecha',(msg) =>{
-  console.log('Lista resultado Letra: ',msg);
+  console.log('Lista resultado Letra: ',msg['resultado']);
 
   const filaContenido = document.getElementById('fila-contenido');
   // Limpiar el contenido de la fila
   filaContenido.innerHTML = '';
-
-  msg.forEach(dato => {
+  if(msg['resultado']!='Sin resultados'){
+    msg.forEach(dato => {
     const columna = document.createElement('div');
     columna.className = 'col'; // Clase de Bootstrap para columnas
-  
+
     // Crear un elemento de imagen
     const imagen = document.createElement('img');
     imagen.src = 'static/image/letras/' + dato[1] + '.png'; // Reemplaza con la nueva ruta de la imagen
@@ -343,12 +343,10 @@ socket.on('resultadoLetraFecha',(msg) =>{
     // Agregar la columna a la fila
     //filaContenido.appendChild(listaSorteo);
       
-    console.log(dato);
-
-  });
-
+    console.log(dato);   
+    });
+  }
 });
-
 
 socket.on('lotto',(msg) =>{
   const imagen = document.getElementById('lotto');

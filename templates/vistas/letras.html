@@ -50,7 +50,7 @@
     }
 
     .cuadro-4d {
-        margin-left:1%%;
+        margin-left:1%;
         align: center ;
         width: 82px; /* Ancho del cuadro */
         height: 82px; /* Alto del cuadro */
@@ -81,10 +81,17 @@
         display: flex;               /* Usar Flexbox */
         justify-content: center;     /* Centrar horizontalmente */
         align-items: center;         /* Centrar verticalmente */
+        height: 200px;
+        margin-left: 20%;
     }
     
     .col-3 {
         margin: 0 10px;             /* Espaciado entre columnas */
+    }
+
+    /* Asegurarse de que el input y el select tengan el mismo tamaño */
+    .form-control {
+        width: 100%; /* Asegura que ambos elementos ocupen el 100% del contenedor */
     }
 
 </style>
@@ -131,19 +138,30 @@
                 <div class="modal-body" id="modalBody">
                     <p>Esta seguro que desea comprar la Opción?</p>
                     <!-- Contenido dinámico se añadirá aquí -->
-                    <img id='lotto'  class="card-img-top row-a" alt="...">
+                    <img id='lotto'  class="row-a" alt="...">
                     <div class="container mt-5">
                         <div class="row justify-content-center align-items-center">
                             <div class="col-auto">
                                 <p class="mb-0">Sorteos:</p>
                             </div>
                             <div class="col-auto">
-                                <select name="nombre_del_select" id="id_del_select" class="form-control">
-                                    <option value="valor1">Opción 1</option>
-                                    <option value="valor2">Opción 2</option>
-                                    <option value="valor3">Opción 3</option>
+                                <p class="mb-0">Monto:</p>
+                            </div>
+                        </div>
+                        <div class="row justify-content-center align-items-center">
+                            <div class="col-auto">
+                                <select name="sorteoTaquilla" id="sorteoTaquilla" class="form-control">
+                                    {% for result in sorteoLetra %}
+                                        {% if  result['status']  == 0   %}
+                                            <option value="{{ result['id'] }}">{{ result['sorteo'] }}</option>
+                                        {% endif %}
+                                    {% endfor %}
                                 </select>
                             </div>
+                            
+                            <div class="col-4">
+                                <input type="text" name="monto" id="monto" class="form-control" value="40 bs." readonly />
+                            </div> 
                         </div>
                     </div>
                 </div>
