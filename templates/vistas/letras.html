@@ -77,6 +77,15 @@
     .modal-backdrop {
         display: none; /* Esto oculta el fondo oscuro */
     }
+    .row-a {
+        display: flex;               /* Usar Flexbox */
+        justify-content: center;     /* Centrar horizontalmente */
+        align-items: center;         /* Centrar verticalmente */
+    }
+    
+    .col-3 {
+        margin: 0 10px;             /* Espaciado entre columnas */
+    }
 
 </style>
 
@@ -122,7 +131,21 @@
                 <div class="modal-body" id="modalBody">
                     <p>Esta seguro que desea comprar la Opción?</p>
                     <!-- Contenido dinámico se añadirá aquí -->
-                    <img id='lotto'  class="card-img-top" alt="...">
+                    <img id='lotto'  class="card-img-top row-a" alt="...">
+                    <div class="container mt-5">
+                        <div class="row justify-content-center align-items-center">
+                            <div class="col-auto">
+                                <p class="mb-0">Sorteos:</p>
+                            </div>
+                            <div class="col-auto">
+                                <select name="nombre_del_select" id="id_del_select" class="form-control">
+                                    <option value="valor1">Opción 1</option>
+                                    <option value="valor2">Opción 2</option>
+                                    <option value="valor3">Opción 3</option>
+                                </select>
+                            </div>
+                        </div>
+                    </div>
                 </div>
                 <div class="modal-footer">
                     <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cerrar</button>
@@ -145,7 +168,7 @@
             
             // Muestra el modal
             miModal.show();
-            
+
             // Agrega un evento al botón de confirmar compra
             document.getElementById('confirmarCompra').onclick = function() {
                 // Aquí puedes implementar la lógica para confirmar la compra
