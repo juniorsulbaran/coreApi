@@ -104,6 +104,7 @@
     /* Asegurarse de que el input y el select tengan el mismo tamaño */
     .form-control {
         width: 100%; /* Asegura que ambos elementos ocupen el 100% del contenedor */
+        text-align: center;
     }
 
 </style>
@@ -163,6 +164,7 @@
                         <div class="row justify-content-center align-items-center">
                             <div class="col-auto">
                                 <select name="sorteoTaquilla" id="sorteoTaquilla" class="form-control">
+                                    <option value="Seleccionar">Seleccionar</option>
                                     {% for result in sorteoLetra %}
                                         {% if  result['status']  == 0   %}
                                             <option value="{{ result['id'] }}">{{ result['sorteo'] }}</option>
@@ -226,10 +228,10 @@
                                         <div class="row justify-content-center">
                                             <div class="col-auto">
                                                 <label for="referencia" class="form-label">Referencia:</label>
-                                                <input type="text" id="referencia" class="form-control" placeholder="Ingrese Numero De Referencia" />
+                                                <input type="text" id="numero" class="form-control" placeholder="Ingrese la referencia" oninput="validateInput(event)" maxlength="12" />
+                                                <small id="errorNumero" class="error"></small>
                                             </div>
                                         </div>
-                                        
                                     </div>
                                 </div>
                             </div>
@@ -248,35 +250,63 @@
     
     <script>
         function compraOpcion(opcionId, opcionNombre) {
-            // Actualiza el contenido del modal
-            //document.getElementById('modalBody').innerText = "¿Estás seguro de que deseas comprar la opción: " + opcionNombre +"?";
-            // Crear un elemento de imagen
+            // Actualiza la imagen del modal
             const imagen = document.getElementById('lotto');
-            imagen.src = 'static/image/letras/'+opcionNombre+'.png'; // Reemplaza con la nueva ruta de la imagen
-
-            // Crea una instancia del modal
-            var miModal = new bootstrap.Modal(document.getElementById('miModal'));
-            // Crea una instancia del modal
-            var modalTicket = new bootstrap.Modal(document.getElementById('modalTicket'));
-            // Muestra el modal
+            imagen.src = 'static/image/letras/' + opcionNombre + '.png';
+        
+            // Crea instancias de los modales
+            const miModal = new bootstrap.Modal(document.getElementById('miModal'));
+            const modalTicket = new bootstrap.Modal(document.getElementById('modalTicket'));
+        
+            // Muestra el modal de compra
             miModal.show();
-
-            // Agrega un evento al botón de confirmar compra
+        
+            // Evento para confirmar la compra
             document.getElementById('confirmarCompra').onclick = function() {
-                // Aquí puedes implementar la lógica para confirmar la compra
                 console.log("Compra confirmada:", opcionId, opcionNombre);
-                //alert("Has confirmado la compra de: " + opcionNombre + " (ID: " + opcionId + ")");
-                modalTicket.show(); //Este modal mostrara el ticket detallado para capturar.
+                modalTicket.show(); // Muestra el modal del ticket
             };
-
-            // Agrega un evento al botón de confirmar compra
+        
+            // Evento para procesar la compra
             document.getElementById('procesarCompra').onclick = function() {
-                // Aquí puedes implementar la lógica para confirmar la compra
-                console.log("Compra Procesada:", opcionId, opcionNombre);
-                //alert("Has confirmado la compra de: " + opcionNombre + " (ID: " + opcionId + ")");
-                modalTicket.hide(); //Este modal mostrara el ticket detallado para capturar.
-                miModal.hide(); // Cierra el modal después de confirmar
+                const numeroInput = document.getElementById('numero');
+                const errorNumero = document.getElementById('errorNumero');
+                const numero = numeroInput.value;
+                const sorteoTaquilla = document.getElementById('sorteoTaquilla');
+                const seleccionarSorteo = sorteoTaquilla.value;
+
+                // Limpiar mensajes de error
+                errorNumero.textContent = '';
+        
+                // Validar que solo contenga dígitos y tenga exactamente 12 caracteres
+                if (!/^\d{12}$/.test(numero)) {
+                    errorNumero.textContent = 'El número debe contener exactamente 12 dígitos.';
+                    return; // Detener la ejecución si hay un error
+                }
+                
+                if(seleccionarSorteo == 'Seleccionar'){
+                    errorNumero.textContent = 'Debe Seleccionar Hora de sorteo';
+                    return; // Detener la ejecución si hay un error
+                }
+        
+                // Si la validación es exitosa, puedes proceder con el envío del formulario
+                alert('Formulario enviado con éxito!');
+                // Aquí puedes agregar el código para enviar el formulario, por ejemplo, usando fetch o XMLHttpRequest
+        
+                // Cierra los modales después de procesar la compra
+                modalTicket.hide();
+                miModal.hide();
             };
+        }
+        
+        function validateInput(event) {
+            const input = event.target;
+            const value = input.value;
+        
+            // Permitir solo dígitos y limitar a 12 caracteres
+            if (!/^\d*$/.test(value) || value.length > 12) {
+                input.value = value.slice(0, 12); // Limitar a 12 caracteres
+            }
         }
     </script>
 
