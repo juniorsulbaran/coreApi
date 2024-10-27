@@ -741,6 +741,21 @@ def crear_cartones():
             "mensajeError": "Servicio no disponible"
         }
         return jsonify(error),503 
+
+
+#comprar Boleto Bingo
+@app.route("/comprarLetra", methods=['POST'])
+def comprarLetra():
+    try:
+        print(request.form)
+        return request.form
+    except ValueError:
+        # Manejo de la excepción específica
+        error = {
+            "codigo": "503",
+            "mensajeError": "Servicio no disponible"
+        }
+        return jsonify(error),503
     
 #comprar Boleto Bingo
 @app.route("/compraBoleto", methods=['POST'])

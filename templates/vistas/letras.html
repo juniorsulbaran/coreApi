@@ -228,7 +228,7 @@
                                         <div class="row justify-content-center">
                                             <div class="col-auto">
                                                 <label for="referencia" class="form-label">Referencia:</label>
-                                                <input type="text" id="numero" class="form-control" placeholder="Ingrese la referencia" oninput="validateInput(event)" maxlength="12" />
+                                                <input type="text" id="referencia" class="form-control" placeholder="Ingrese la referencia" oninput="validateInput(event)" maxlength="12" />
                                                 <small id="errorNumero" class="error"></small>
                                             </div>
                                         </div>
@@ -269,12 +269,12 @@
         
             // Evento para procesar la compra
             document.getElementById('procesarCompra').onclick = function() {
-                const numeroInput = document.getElementById('numero');
+                const numeroInput = document.getElementById('referencia');
                 const errorNumero = document.getElementById('errorNumero');
                 const numero = numeroInput.value;
                 const sorteoTaquilla = document.getElementById('sorteoTaquilla');
                 const seleccionarSorteo = sorteoTaquilla.value;
-
+        
                 // Limpiar mensajes de error
                 errorNumero.textContent = '';
         
@@ -283,30 +283,81 @@
                     errorNumero.textContent = 'El número debe contener exactamente 12 dígitos.';
                     return; // Detener la ejecución si hay un error
                 }
-                
-                if(seleccionarSorteo == 'Seleccionar'){
-                    errorNumero.textContent = 'Debe Seleccionar Hora de sorteo';
+        
+                // Validar selección de sorteo
+                if (seleccionarSorteo === 'Seleccionar') {
+                    errorNumero.textContent = 'Debe seleccionar una hora de sorteo.';
                     return; // Detener la ejecución si hay un error
                 }
         
-                // Si la validación es exitosa, puedes proceder con el envío del formulario
-                alert('Formulario enviado con éxito!');
-                // Aquí puedes agregar el código para enviar el formulario, por ejemplo, usando fetch o XMLHttpRequest
+                // Procesamos la compra y guardamos los datos del ticket
+                comprarLetra(opcionId, opcionNombre); // Pasar los parámetros necesarios
         
                 // Cierra los modales después de procesar la compra
                 modalTicket.hide();
                 miModal.hide();
             };
-        }
         
-        function validateInput(event) {
-            const input = event.target;
-            const value = input.value;
+            // Función para validar la entrada
+            function validateInput(event) {
+                const input = event.target;
+                const value = input.value;
         
-            // Permitir solo dígitos y limitar a 12 caracteres
-            if (!/^\d*$/.test(value) || value.length > 12) {
-                input.value = value.slice(0, 12); // Limitar a 12 caracteres
+                // Permitir solo dígitos y limitar a 12 caracteres
+                if (!/^\d*$/.test(value) || value.length > 12) {
+                    input.value = value.slice(0, 12); // Limitar a 12 caracteres
+                }
+            }
+        
+            // Función para comprar letra
+            function comprarLetra(opcionId, opcionNombre) {
+                const url = '/comprarLetra';
+                const sorteo = $('#sorteoTaquilla').val();
+                const referencia = $('#referencia').val();
+                const monto = $('#monto').val();
+        
+                const dato = {
+                    "sorteo": sorteo,
+                    "referencia": referencia,
+                    "monto": monto,
+                    "opcionId": opcionId, // Agregar opcionId si es necesario
+                    "opcionNombre": opcionNombre // Agregar opcionNombre si es necesario
+                };
+        
+                $.ajax({
+                    type: "POST",
+                    url: url,
+                    data: dato,
+                    beforeSend: function() {
+                        let timerInterval;
+                        Swal.fire({
+                            title: '',
+                            html: 'Procesando.',
+                            timer: 5000,
+                            timerProgressBar: true,
+                            didOpen: () => {
+                                Swal.showLoading();
+                                timerInterval = setInterval(() => {
+                                    const seconds = Math.ceil(Swal.getTimerLeft() / 1000); // Convertir milisegundos a segundos y redondear hacia arriba
+                                }, 1000); // Actualizar cada segundo
+                            },
+                            willClose: () => {
+                                clearInterval(timerInterval);
+                            }
+                        });
+                    },
+                    success: function(response) {
+                        console.log(response);
+                        $('#container').html(response);
+                        // Hacer un elemento visible si es necesario
+                    },
+                    error: function(error) {
+                        console.log(error);
+                    }
+                });
+                return false; 
             }
         }
+        
     </script>
 
