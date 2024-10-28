@@ -248,7 +248,7 @@
         </div>
     </div>
     
-    <script>
+    <script>        
         function compraOpcion(opcionId, opcionNombre) {
             // Actualiza la imagen del modal
             const imagen = document.getElementById('lotto');
@@ -308,20 +308,22 @@
                     input.value = value.slice(0, 12); // Limitar a 12 caracteres
                 }
             }
-        
+
             // Función para comprar letra
             function comprarLetra(opcionId, opcionNombre) {
                 const url = '/comprarLetra';
                 const sorteo = $('#sorteoTaquilla').val();
                 const referencia = $('#referencia').val();
                 const monto = $('#monto').val();
-        
+                        
                 const dato = {
                     "sorteo": sorteo,
                     "referencia": referencia,
                     "monto": monto,
                     "opcionId": opcionId, // Agregar opcionId si es necesario
-                    "opcionNombre": opcionNombre // Agregar opcionNombre si es necesario
+                    "opcionNombre": opcionNombre, // Agregar opcionNombre si es necesario
+                    "status":1,
+                    "idVendedor": "120983"
                 };
         
                 $.ajax({

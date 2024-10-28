@@ -324,6 +324,28 @@ def BuscarSorteo():
         ListaSorteo.append(dicSorteo)
     return ListaSorteo
 
+def generarTicketLetra(datosTicketLetra,hora_12h,nowDate):
+    sorteo = datosTicketLetra['sorteo']
+    referencia = datosTicketLetra['referencia']
+    monto = datosTicketLetra['monto']
+    idjuego = 1
+    opcionId = datosTicketLetra['opcionId']
+    opcionNombre = datosTicketLetra['opcionNombre'] 
+    fecha = nowDate
+    hora = hora_12h
+    idVendedor = datosTicketLetra['idVendedor']
+    status = 1 #vendido
+    
+    nombreTabla1 = "ticketvendido"
+    mydb = conectar_base_datos()
+    mycursor1 = mydb.cursor()
+    sql1 = "INSERT INTO "+ nombreTabla1 + " (idjuego,idopcion,opcionNombre,monto,idsorteo,fecha,hora,referencia,idvendedor,status) VALUES (%s,%s,%s,%s,%s,%s,%s,%s,%s,%s)" 
+    val1 = (idjuego,opcionId,opcionNombre,monto,sorteo,fecha,hora,referencia,idVendedor,status)
+    mycursor1.execute(sql1,val1)
+    mydb.commit()
+    mydb.close
+    return 'inserto Correctamente'
+
 #Consultamos la tabla numero unico por si hay sorteo activo
 def numerosSorteo():
     mydb = conectar_base_datos()

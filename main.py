@@ -17,6 +17,7 @@ import pytz
 from datetime import datetime, timedelta
 #variables sorteo letra
 sorteoletra = ''
+hora_12h=''
 # Definir la zona horaria de Venezuela
 tz_venezuela = pytz.timezone('America/Caracas')
 # Obtener la hora actual en Venezuela
@@ -747,8 +748,15 @@ def crear_cartones():
 @app.route("/comprarLetra", methods=['POST'])
 def comprarLetra():
     try:
-        print(request.form)
-        return request.form
+        datosTicketLetra = request.form
+        # Convertir la cadena a un objeto datetime
+        hora_24h = hora_actual_venezuela.strftime('%H:%M:%S')
+        hora_objeto = datetime.strptime(hora_24h, "%H:%M:%S")
+        # Formatear la hora en formato 12H
+        hora_12h = hora_objeto.strftime("%I:%M:%S %p")
+        insertTicket = generarTicketLetra(datosTicketLetra,hora_12h,nowDate)
+        print(insertTicket)
+        return insertTicket
     except ValueError:
         # Manejo de la excepción específica
         error = {
