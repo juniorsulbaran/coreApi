@@ -743,20 +743,26 @@ def crear_cartones():
         }
         return jsonify(error),503 
 
-
 #comprar Boleto Bingo
 @app.route("/comprarLetra", methods=['POST'])
 def comprarLetra():
     try:
         datosTicketLetra = request.form
+        sorteos = BuscarSorteo()
+        for items in sorteos:
+            if int(datosTicketLetra['sorteo']) == int(items['id']):
+                sorteoOpcion = items['sorteo']
+                print("Sorteo Opcion: ",sorteoOpcion)
+        
         # Convertir la cadena a un objeto datetime
         hora_24h = hora_actual_venezuela.strftime('%H:%M:%S')
         hora_objeto = datetime.strptime(hora_24h, "%H:%M:%S")
         # Formatear la hora en formato 12H
         hora_12h = hora_objeto.strftime("%I:%M:%S %p")
-        insertTicket = generarTicketLetra(datosTicketLetra,hora_12h,nowDate)
-        print(insertTicket)
-        return insertTicket
+        serialTicket = generarTicketLetra(datosTicketLetra,hora_12h,nowDate)
+        print("Serial: ",serialTicket)
+        if serialTicket !='ok':
+            return render_template('vistas/ticket.html',datosTicketLetra=datosTicketLetra,hora_12h=hora_12h,nowDate=nowDate,serialTicket=serialTicket,sorteoOpcion=sorteoOpcion )
     except ValueError:
         # Manejo de la excepción específica
         error = {

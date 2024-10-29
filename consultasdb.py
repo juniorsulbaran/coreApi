@@ -343,8 +343,13 @@ def generarTicketLetra(datosTicketLetra,hora_12h,nowDate):
     val1 = (idjuego,opcionId,opcionNombre,monto,sorteo,fecha,hora,referencia,idVendedor,status)
     mycursor1.execute(sql1,val1)
     mydb.commit()
+    
+    #obtenemos el ultimo registro de la tababla para enviar el serial del ticket
+    mycursor1.execute("SELECT * FROM "+ nombreTabla1 + " ORDER BY id DESC LIMIT 1")
+    ultimo_registro = mycursor1.fetchone()  # Obtener el último registro
     mydb.close
-    return 'inserto Correctamente'
+    return ultimo_registro[0]
+    
 
 #Consultamos la tabla numero unico por si hay sorteo activo
 def numerosSorteo():

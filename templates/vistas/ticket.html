@@ -1,0 +1,55 @@
+<style>
+    .card-img-top{
+        width:220px;
+        height:180px;
+    }
+</style>
+<div id="container" class="container">
+    <!-- ticket jugada -->
+    <div id="miModal" >
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="miModalLabel">AgroBingo-LottoABC</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body" id="modalBody">
+                    <div style="display: flex; align-items: center;">
+                        <strong style="margin-right: 45px;">Fecha</strong>
+                        <strong style="margin-right: 66px;">Hora</strong>
+                        <strong>Serial</strong> <!-- Asegúrate de que 'serialTicket' esté definido en tu contexto -->
+                    </div>
+                    <div style="display: flex; align-items: center;">
+                        <p style="margin-right: 10px; margin-top:-10px;">{{ nowDate }}</p>
+                        <p style="margin-right: 10px; margin-top:-10px;">{{ hora_12h }}</p>
+                        <p style="margin-top:-10px;" >{{ serialTicket }}</p> <!-- Asegúrate de que 'serialTicket' esté definido en tu contexto -->
+                    </div>
+                    <!-- Contenido dinámico se añadirá aquí -->
+                    <img src="{{ url_for('static', filename='image/letras/' + datosTicketLetra['opcionNombre'] + '.png') }}" class="card-img-top" alt="...">
+                    <div class="container mt-5">
+                        <div class="row justify-content-center align-items-center">
+                            <div class="col-auto">
+                                <p class="mb-0">Sorteos:</p>
+                            </div>
+                            <div class="col-auto">
+                                <p class="mb-0">Monto:</p>
+                            </div>
+                        </div>
+                        <div class="row justify-content-center align-items-center" style="margin-top: 80px;">
+                            <div class="col-6">      
+                                <input type="text" name="monto" id="monto" style="margin-top: -80px;" class="form-control"  value="{{ sorteoOpcion }}" readonly />
+                            </div>
+                            <div class="col-4">
+                                <input type="text" name="monto" id="monto" style="margin-top: -80px;" class="form-control" value="{{ datosTicketLetra['monto'] }}" readonly />
+                            </div> 
+                        </div>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cerrar</button>
+                    <button type="button" class="btn btn-primary" id="confirmarCompra">Imprimir</button>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
