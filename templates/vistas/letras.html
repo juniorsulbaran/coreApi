@@ -289,6 +289,13 @@
                     errorNumero.textContent = 'Debe seleccionar una hora de sorteo.';
                     return; // Detener la ejecución si hay un error
                 }
+
+                // Validar el número
+                if (numero >= 5 || numero <= 60) {
+                    errorNumero.textContent = 'La jugada debe ser mayor 5 y menor a 60.'; 
+                } else {
+                    errorSpan.textContent = ''; // Limpiar el mensaje de error
+                }
         
                 // Procesamos la compra y guardamos los datos del ticket
                 comprarLetra(opcionId, opcionNombre); // Pasar los parámetros necesarios

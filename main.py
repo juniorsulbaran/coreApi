@@ -837,33 +837,39 @@ def comprarLetra():
                         return render_template('vistas/ticket.html',datosTicketLetra=datosTicketLetra,hora_12h=hora_12h,nowDate=nowDate,formatoSerial=formatoSerial,sorteoOpcion=sorteoOpcion)            
             else:
                 #sumamos monto de la opcion jugada mas el monto opcion vendida
-                    montoOpcionMayor = montoOpcionVendida[0] + int(datosTicketLetra['monto'])
-                    if montoOpcionMayor < limiteOpciones:
-                        print('vendo la opcion',datosTicketLetra['monto'])
-                        sorteos = BuscarSorteo()
-                        for items in sorteos:
-                            if int(datosTicketLetra['sorteo']) == int(items['id']):
-                                sorteoOpcion = items['sorteo']
-                                print("Sorteo Opcion: ",sorteoOpcion)
-                        # Formatear la hora en formato 12H
-                        hora_12h = datetime.now(tz_venezuela)   
-                        print('Hora ticket: ',hora_12h.strftime("%I:%M:%S %p"))
-                        hora_12h = hora_12h.strftime("%I:%M:%S %p")
-                        serialTicket = generarTicketLetra(datosTicketLetra,hora_12h,nowDate)
-                        # Filtrar caracteres
-                        cadena_limpia = ''.join(filter(lambda x: x.isalnum() or x.isspace(), hora_12h)) 
-                        numeros = [serialTicket, cadena_limpia]
-                        # Convertir a cadenas y concatenar 
-                        resultado = ''.join(map(str, numeros))
-                        formatoSerial = resultado
-                        if serialTicket !='ok':
-                            return render_template('vistas/ticket.html',datosTicketLetra=datosTicketLetra,hora_12h=hora_12h,nowDate=nowDate,formatoSerial=formatoSerial,sorteoOpcion=sorteoOpcion ) 
-                    else:
-                         #cuando el monto de la jugada es mayor al limite pero queda un monto menor para llegar al limite 
-                        if montoOpcionMayor > limiteOpciones:
-                            montoOpcionDisponible = limiteOpciones -  montoOpcionVendida[0]
-                            print('Nuevo Monto disponible: ',montoOpcionDisponible) 
-                            return 'dispinible: ' + montoOpcionDisponible 
+                #obtenemos la opcion Jugada y el sorteo
+                opcionJugada = datosTicketLetra['opcionId']
+                idSorteo = datosTicketLetra['sorteo']
+                montoOpcionVendida = sumaJugadasOpcion(opcionJugada,idSorteo)
+                print('monto 60: ',montoOpcionVendida[0])
+                 
+                if montoOpcionVendida[0] == None and int(datosTicketLetra['monto']) == limiteOpciones:
+                    print('vendo la opcion',datosTicketLetra['monto'])
+                    sorteos = BuscarSorteo()
+                    for items in sorteos:
+                        if int(datosTicketLetra['sorteo']) == int(items['id']):
+                            sorteoOpcion = items['sorteo']
+                            print("Sorteo Opcion: ",sorteoOpcion)
+                    # Formatear la hora en formato 12H
+                    hora_12h = datetime.now(tz_venezuela)   
+                    print('Hora ticket: ',hora_12h.strftime("%I:%M:%S %p"))
+                    hora_12h = hora_12h.strftime("%I:%M:%S %p")
+                    serialTicket = generarTicketLetra(datosTicketLetra,hora_12h,nowDate)
+                    # Filtrar caracteres
+                    cadena_limpia = ''.join(filter(lambda x: x.isalnum() or x.isspace(), hora_12h)) 
+                    numeros = [serialTicket, cadena_limpia]
+                    # Convertir a cadenas y concatenar 
+                    resultado = ''.join(map(str, numeros))
+                    formatoSerial = resultado
+                    if serialTicket !='ok':
+                        return render_template('vistas/ticket.html',datosTicketLetra=datosTicketLetra,hora_12h=hora_12h,nowDate=nowDate,formatoSerial=formatoSerial,sorteoOpcion=sorteoOpcion ) 
+                else: 
+                    if montoOpcionVendida[0] ==60 and int(datosTicketLetra['monto']) == limiteOpciones:
+                        datos ={
+                        'disponible':'disponible',
+                        'monto':0
+                        }
+                        return datos
         else:           
             return 'referencia duplicada'
     except ValueError:
