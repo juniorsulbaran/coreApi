@@ -10,37 +10,42 @@
         <div class="modal-dialog">
             <div class="modal-content">
                 <div class="modal-header">
-                    <h5 class="modal-title" id="miModalLabel">AgroBingo-LottoABC</h5>
-                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                    <div class="row justify-content-center align-items-center w-100">
+                        <div class="col-auto">
+                            <h6 class="modal-title" id="miModalLabel">Ticket-LottoABC</h6>
+                        </div>
+                        <div class="col-auto">
+                            <strong>Serial: {{ formatoSerial }}</strong>
+                        </div>
+                    </div> 
                 </div>
                 <div class="modal-body" id="modalBody">
                     <div style="display: flex; align-items: center;">
                         <strong style="margin-right: 45px;">Fecha</strong>
                         <strong style="margin-right: 66px;">Hora</strong>
-                        <strong>Serial</strong> <!-- Asegúrate de que 'serialTicket' esté definido en tu contexto -->
+                         <!-- Asegúrate de que 'serialTicket' esté definido en tu contexto -->
                     </div>
                     <div style="display: flex; align-items: center;">
                         <p style="margin-right: 10px; margin-top:-10px;">{{ nowDate }}</p>
-                        <p style="margin-right: 10px; margin-top:-10px;">{{ hora_12h }}</p>
-                        <p style="margin-top:-10px;" >{{ serialTicket }}</p> <!-- Asegúrate de que 'serialTicket' esté definido en tu contexto -->
+                        <p style="margin-right: 50px; margin-top:-10px;">{{ hora_12h }}</p>
                     </div>
                     <!-- Contenido dinámico se añadirá aquí -->
                     <img src="{{ url_for('static', filename='image/letras/' + datosTicketLetra['opcionNombre'] + '.png') }}" class="card-img-top" alt="...">
                     <div class="container mt-5">
                         <div class="row justify-content-center align-items-center">
-                            <div class="col-auto">
-                                <p class="mb-0">Sorteos:</p>
+                            <div class="col-7">
+                                <p >Sorteo:</p>
                             </div>
-                            <div class="col-auto">
-                                <p class="mb-0">Monto:</p>
+                            <div class="col-5">
+                                <p >Monto:</p>
                             </div>
                         </div>
                         <div class="row justify-content-center align-items-center" style="margin-top: 80px;">
-                            <div class="col-6">      
-                                <input type="text" name="monto" id="monto" style="margin-top: -80px;" class="form-control"  value="{{ sorteoOpcion }}" readonly />
+                            <div class="col-7">      
+                                <strong name="monto" id="monto" style="margin-top: -80px;" class="form-control">{{ sorteoOpcion }}</strong>
                             </div>
-                            <div class="col-4">
-                                <input type="text" name="monto" id="monto" style="margin-top: -80px;" class="form-control" value="{{ datosTicketLetra['monto'] }}" readonly />
+                            <div class="col-5">
+                                <strong name="monto" id="monto" style="margin-top: -80px;" class="form-control">{{ datosTicketLetra['monto'] }}</strong>
                             </div> 
                         </div>
                     </div>

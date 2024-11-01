@@ -173,7 +173,7 @@
                                 </select>
                             </div>
                             <div class="col-4">
-                                <input type="text" name="monto" id="monto" class="form-control" value="40 bs." readonly />
+                                <input type="text" name="monto" id="monto" class="form-control" value="40" />
                             </div> 
                         </div>
                     </div>
@@ -228,7 +228,7 @@
                                         <div class="row justify-content-center">
                                             <div class="col-auto">
                                                 <label for="referencia" class="form-label">Referencia:</label>
-                                                <input type="text" id="referencia" class="form-control" placeholder="Ingrese la referencia" oninput="validateInput(event)" maxlength="12" />
+                                                <input type="text" id="referencia1" class="form-control" placeholder="Ingrese la referencia" oninput="validateInput(event)" maxlength="12" />
                                                 <small id="errorNumero" class="error"></small>
                                             </div>
                                         </div>
@@ -269,7 +269,7 @@
         
             // Evento para procesar la compra
             document.getElementById('procesarCompra').onclick = function() {
-                const numeroInput = document.getElementById('referencia');
+                const numeroInput = document.getElementById('referencia1');
                 const errorNumero = document.getElementById('errorNumero');
                 const numero = numeroInput.value;
                 const sorteoTaquilla = document.getElementById('sorteoTaquilla');
@@ -292,10 +292,7 @@
         
                 // Procesamos la compra y guardamos los datos del ticket
                 comprarLetra(opcionId, opcionNombre); // Pasar los parámetros necesarios
-        
-                // Cierra los modales después de procesar la compra
-                modalTicket.hide();
-                miModal.hide();
+    
             };
         
             // Función para validar la entrada
@@ -313,8 +310,9 @@
             function comprarLetra(opcionId, opcionNombre) {
                 const url = '/comprarLetra';
                 const sorteo = $('#sorteoTaquilla').val();
-                const referencia = $('#referencia').val();
+                const referencia = $('#referencia1').val();
                 const monto = $('#monto').val();
+                const hora = $('#hora').val();
                         
                 const dato = {
                     "sorteo": sorteo,
@@ -322,6 +320,7 @@
                     "monto": monto,
                     "opcionId": opcionId, // Agregar opcionId si es necesario
                     "opcionNombre": opcionNombre, // Agregar opcionNombre si es necesario
+                    "hora":hora,
                     "status":1,
                     "idVendedor": "120983"
                 };
@@ -350,16 +349,34 @@
                     },
                     success: function(response) {
                         console.log(response);
-                        $('#container').html(response);
-                        // Hacer un elemento visible si es necesario
+                        if (response == 'referencia duplicada') {
+                            // Hacer un elemento visible si es necesario
+                            console.log(response);
+                            errorNumero.textContent = 'Número de referencia ya existe'; 
+                            referencia.textContent = '';    
+                        } else if (response['disponible'] == 'disponible') { 
+                            if(response['monto']==0){
+                                errorNumero.textContent = 'Jugada No Disponible'  
+                            }else{
+                                errorNumero.textContent = 'Monto Disponible Para esta Jugada: ' + response['monto']; 
+                            }     
+                        } else {
+                            $('#container').html(response);
+                            // Cierra los modales después de procesar la compra
+                            modalTicket.hide();
+                            miModal.hide();
+                        }  
+                        
                     },
                     error: function(error) {
-                        console.log(error);
+                        if(error == 'referencia duplicada'){
+                            console.log(error);
+                            errorNumero.textContent = 'Numero de referencia ya existe';     
+                        }    
                     }
                 });
                 return false; 
             }
-        }
-        
+        }  
     </script>
 

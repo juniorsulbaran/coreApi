@@ -32,7 +32,6 @@ def resultadoLetra(nowDate):
         result = {
             'resultado':'Sin resultados'
             } 
-    print('primer: ',result['resultado'])
     return result
 
 
@@ -146,6 +145,37 @@ def buscarReferencia(referencia):
     print(result)
     return result
 
+def sumaJugadasOpcion(opcionJugada,idSorteo):
+    mydb = conectar_base_datos()
+    mycursor = mydb.cursor()
+    mycursor.execute("SELECT SUM(monto) FROM ticketvendido WHERE idjuego and sorteo = '%s'" % opcionJugada)
+    
+
+def buscarReferenciaLetra(referencia):
+    mydb = conectar_base_datos()
+    mycursor = mydb.cursor()
+    mycursor.execute("SELECT referencia FROM ticketvendido WHERE referencia = '%s'" % referencia)
+    result = mycursor.fetchall()
+    mydb.close
+    print('referencia ticket: ',result)
+    return result
+
+def sumaJugadasOpcion(opcionJugada, idSorteo):
+    # Asegúrate de convertir los parámetros a enteros dentro de la función
+    opcionJugada = int(opcionJugada)
+    idSorteo = int(idSorteo)
+    mydb = conectar_base_datos()
+    mycursor = mydb.cursor()
+    # Corregir la consulta SQL
+    query = "SELECT SUM(monto)  FROM ticketvendido WHERE idopcion = %s AND idsorteo = %s"
+    mycursor.execute(query, (opcionJugada, idSorteo))
+    result = mycursor.fetchall()  # Obtener un solo resultado
+    mydb.close()  # Asegúrate de llamar a close() como un método
+    print('Suma jugadas:', result)
+    # Retornar la suma o 0 si no hay resultados
+    return result[0] if result and result[0] is not None else 0
+
+
 def buscarCartones(serialcarton):
     mydb = conectar_base_datos()
     mycursor = mydb.cursor()
@@ -228,6 +258,14 @@ def contador():
     mydb.close
     contar = result
     return contar 
+
+def BuscarLimitesOpciones(idjuego):
+    mydb = conectar_base_datos()
+    mycursor = mydb.cursor()
+    mycursor.execute("SELECT * FROM limiteopciones WHERE idjuego = '%s'" % idjuego)
+    result = mycursor.fetchall()
+    mydb.close
+    return result[0][1]
 
 def guardoNumeroSorteado(numero):
     #guardo los datos del pago movil para pagar el 
@@ -314,7 +352,7 @@ def BuscarSorteo():
     mydb.close
     dicSorteo=''
     ListaSorteo=[]
-    print(result)
+    print('Lista Sorteos: ',result)
     for items in result:
         dicSorteo = {
             'id': items[0],
@@ -325,8 +363,10 @@ def BuscarSorteo():
     return ListaSorteo
 
 def generarTicketLetra(datosTicketLetra,hora_12h,nowDate):
+    referencia = ''
     sorteo = datosTicketLetra['sorteo']
     referencia = datosTicketLetra['referencia']
+    print('Referencia GenerarTicket: ',referencia)
     monto = datosTicketLetra['monto']
     idjuego = 1
     opcionId = datosTicketLetra['opcionId']
@@ -339,7 +379,7 @@ def generarTicketLetra(datosTicketLetra,hora_12h,nowDate):
     nombreTabla1 = "ticketvendido"
     mydb = conectar_base_datos()
     mycursor1 = mydb.cursor()
-    sql1 = "INSERT INTO "+ nombreTabla1 + " (idjuego,idopcion,opcionNombre,monto,idsorteo,fecha,hora,referencia,idvendedor,status) VALUES (%s,%s,%s,%s,%s,%s,%s,%s,%s,%s)" 
+    sql1 = "INSERT INTO "+ nombreTabla1 + "(idjuego,idopcion,opcionNombre,monto,idsorteo,fecha,hora,referencia,idvendedor,status) VALUES (%s,%s,%s,%s,%s,%s,%s,%s,%s,%s)" 
     val1 = (idjuego,opcionId,opcionNombre,monto,sorteo,fecha,hora,referencia,idVendedor,status)
     mycursor1.execute(sql1,val1)
     mydb.commit()

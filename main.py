@@ -16,6 +16,7 @@ import threading
 import pytz
 from datetime import datetime, timedelta
 #variables sorteo letra
+
 sorteoletra = ''
 hora_12h=''
 # Definir la zona horaria de Venezuela
@@ -476,8 +477,7 @@ def hora(hora):
         # Convertir la cadena a un objeto datetime
         hora_objeto = datetime.strptime(hora_24h, "%H:%M:%S")
         # Formatear la hora en formato 12H
-        hora_12h = hora_objeto.strftime("%I:%M:%S %p")
-            
+        hora_12h = hora_objeto.strftime("%I:%M:%S %p")       
         emit('time', hora_12h, broadcast=True)
         
 #fecha del servido
@@ -748,21 +748,124 @@ def crear_cartones():
 def comprarLetra():
     try:
         datosTicketLetra = request.form
-        sorteos = BuscarSorteo()
-        for items in sorteos:
-            if int(datosTicketLetra['sorteo']) == int(items['id']):
-                sorteoOpcion = items['sorteo']
-                print("Sorteo Opcion: ",sorteoOpcion)
-        
-        # Convertir la cadena a un objeto datetime
-        hora_24h = hora_actual_venezuela.strftime('%H:%M:%S')
-        hora_objeto = datetime.strptime(hora_24h, "%H:%M:%S")
-        # Formatear la hora en formato 12H
-        hora_12h = hora_objeto.strftime("%I:%M:%S %p")
-        serialTicket = generarTicketLetra(datosTicketLetra,hora_12h,nowDate)
-        print("Serial: ",serialTicket)
-        if serialTicket !='ok':
-            return render_template('vistas/ticket.html',datosTicketLetra=datosTicketLetra,hora_12h=hora_12h,nowDate=nowDate,serialTicket=serialTicket,sorteoOpcion=sorteoOpcion )
+        print('datos enviados: ',datosTicketLetra)
+        resultadoReferencia = ""
+        #validamos que no se ingrese una referencia duplicada
+        resultadoReferencia = buscarReferenciaLetra(datosTicketLetra['referencia'])
+        if resultadoReferencia == []:
+           #Verificamos limites disponibles
+            idjuegos = 1
+            limiteOpciones = BuscarLimitesOpciones(idjuegos)
+            print('Limite: ',limiteOpciones)
+            #Verificamos los limites de la opcion jugada
+            if int(datosTicketLetra['monto']) < limiteOpciones:
+                print('entre a validar montos')
+                #obtenemos la opcion Jugada y el sorteo
+                opcionJugada = datosTicketLetra['opcionId']
+                idSorteo = datosTicketLetra['sorteo']
+                #sumar la venta de la opcion para la hora del sorteo
+                montoOpcionVendida = sumaJugadasOpcion(opcionJugada,idSorteo)
+                print('total Jugado:', montoOpcionVendida[0])
+                if  montoOpcionVendida[0] == None:
+                    #entra aqui cuando es la primera vez que se jugo la opcion
+                    sorteos = BuscarSorteo()
+                    for items in sorteos:
+                        if int(datosTicketLetra['sorteo']) == int(items['id']):
+                            sorteoOpcion = items['sorteo']
+                            print("Sorteo Opcion: ",sorteoOpcion)
+                    # Formatear la hora en formato 12H
+                    hora_12h = datetime.now(tz_venezuela)   
+                    print('Hora ticket: ',hora_12h.strftime("%I:%M:%S %p"))
+                    hora_12h = hora_12h.strftime("%I:%M:%S %p")
+                    serialTicket = generarTicketLetra(datosTicketLetra,hora_12h,nowDate)
+                    # Filtrar caracteres
+                    cadena_limpia = ''.join(filter(lambda x: x.isalnum() or x.isspace(), hora_12h)) 
+                    numeros = [serialTicket, cadena_limpia]
+                    # Convertir a cadenas y concatenar 
+                    resultado = ''.join(map(str, numeros))
+                    formatoSerial = resultado
+                    if serialTicket !='ok':
+                        return render_template('vistas/ticket.html',datosTicketLetra=datosTicketLetra,hora_12h=hora_12h,nowDate=nowDate,formatoSerial=formatoSerial,sorteoOpcion=sorteoOpcion)
+                montoOpcionMayor = montoOpcionVendida[0] + int(datosTicketLetra['monto'])
+                if montoOpcionMayor < limiteOpciones:
+                    print('vendo la opcion',datosTicketLetra['monto'])
+                    sorteos = BuscarSorteo()
+                    for items in sorteos:
+                        if int(datosTicketLetra['sorteo']) == int(items['id']):
+                            sorteoOpcion = items['sorteo']
+                            print("Sorteo Opcion: ",sorteoOpcion)
+                    # Formatear la hora en formato 12H
+                    hora_12h = datetime.now(tz_venezuela)   
+                    print('Hora ticket: ',hora_12h.strftime("%I:%M:%S %p"))
+                    hora_12h = hora_12h.strftime("%I:%M:%S %p")
+                    serialTicket = generarTicketLetra(datosTicketLetra,hora_12h,nowDate)
+                    # Filtrar caracteres
+                    cadena_limpia = ''.join(filter(lambda x: x.isalnum() or x.isspace(), hora_12h)) 
+                    numeros = [serialTicket, cadena_limpia]
+                    # Convertir a cadenas y concatenar 
+                    resultado = ''.join(map(str, numeros))
+                    formatoSerial = resultado
+                    if serialTicket !='ok':
+                        return render_template('vistas/ticket.html',datosTicketLetra=datosTicketLetra,hora_12h=hora_12h,nowDate=nowDate,formatoSerial=formatoSerial,sorteoOpcion=sorteoOpcion)
+                if montoOpcionMayor > limiteOpciones:
+                    montoDisponible = limiteOpciones - montoOpcionVendida[0] 
+                    print(montoDisponible)
+                    datos ={
+                        'disponible':'disponible',
+                        'monto':montoDisponible
+                    }
+                    return datos
+                if montoOpcionMayor == limiteOpciones:
+                    #entra aqui cuando el limite es igual a la suma de las jugadas
+                    sorteos = BuscarSorteo()
+                    for items in sorteos:
+                        if int(datosTicketLetra['sorteo']) == int(items['id']):
+                            sorteoOpcion = items['sorteo']
+                            print("Sorteo Opcion: ",sorteoOpcion)
+                    # Formatear la hora en formato 12H
+                    hora_12h = datetime.now(tz_venezuela)   
+                    print('Hora ticket: ',hora_12h.strftime("%I:%M:%S %p"))
+                    hora_12h = hora_12h.strftime("%I:%M:%S %p")
+                    serialTicket = generarTicketLetra(datosTicketLetra,hora_12h,nowDate)
+                    # Filtrar caracteres
+                    cadena_limpia = ''.join(filter(lambda x: x.isalnum() or x.isspace(), hora_12h)) 
+                    numeros = [serialTicket, cadena_limpia]
+                    # Convertir a cadenas y concatenar 
+                    resultado = ''.join(map(str, numeros))
+                    formatoSerial = resultado
+                    if serialTicket !='ok':
+                        return render_template('vistas/ticket.html',datosTicketLetra=datosTicketLetra,hora_12h=hora_12h,nowDate=nowDate,formatoSerial=formatoSerial,sorteoOpcion=sorteoOpcion)            
+            else:
+                #sumamos monto de la opcion jugada mas el monto opcion vendida
+                    montoOpcionMayor = montoOpcionVendida[0] + int(datosTicketLetra['monto'])
+                    if montoOpcionMayor < limiteOpciones:
+                        print('vendo la opcion',datosTicketLetra['monto'])
+                        sorteos = BuscarSorteo()
+                        for items in sorteos:
+                            if int(datosTicketLetra['sorteo']) == int(items['id']):
+                                sorteoOpcion = items['sorteo']
+                                print("Sorteo Opcion: ",sorteoOpcion)
+                        # Formatear la hora en formato 12H
+                        hora_12h = datetime.now(tz_venezuela)   
+                        print('Hora ticket: ',hora_12h.strftime("%I:%M:%S %p"))
+                        hora_12h = hora_12h.strftime("%I:%M:%S %p")
+                        serialTicket = generarTicketLetra(datosTicketLetra,hora_12h,nowDate)
+                        # Filtrar caracteres
+                        cadena_limpia = ''.join(filter(lambda x: x.isalnum() or x.isspace(), hora_12h)) 
+                        numeros = [serialTicket, cadena_limpia]
+                        # Convertir a cadenas y concatenar 
+                        resultado = ''.join(map(str, numeros))
+                        formatoSerial = resultado
+                        if serialTicket !='ok':
+                            return render_template('vistas/ticket.html',datosTicketLetra=datosTicketLetra,hora_12h=hora_12h,nowDate=nowDate,formatoSerial=formatoSerial,sorteoOpcion=sorteoOpcion ) 
+                    else:
+                         #cuando el monto de la jugada es mayor al limite pero queda un monto menor para llegar al limite 
+                        if montoOpcionMayor > limiteOpciones:
+                            montoOpcionDisponible = limiteOpciones -  montoOpcionVendida[0]
+                            print('Nuevo Monto disponible: ',montoOpcionDisponible) 
+                            return 'dispinible: ' + montoOpcionDisponible 
+        else:           
+            return 'referencia duplicada'
     except ValueError:
         # Manejo de la excepción específica
         error = {
