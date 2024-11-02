@@ -158,7 +158,7 @@
                                 <p class="mb-0">Sorteos:</p>
                             </div>
                             <div class="col-auto">
-                                <p class="mb-0">Monto:</p>
+                                <p class="mb-0">Monto Bs.:</p>
                             </div>
                         </div>
                         <div class="row justify-content-center align-items-center">
@@ -173,7 +173,7 @@
                                 </select>
                             </div>
                             <div class="col-4">
-                                <input type="text" name="monto" id="monto" class="form-control" value="40" />
+                                <input type="text" name="monto" id="monto" class="form-control" placeholder="0.00 Bs." />
                             </div> 
                         </div>
                     </div>
@@ -240,7 +240,7 @@
                         </div>
                     </div>
                     <div class="modal-footer">
-                        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cerrar</button>
+                        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal" >Cerrar</button>
                         <button type="button" class="btn btn-primary" id="procesarCompra">Procesar Compra</button>
                     </div>
                 </div>
@@ -291,10 +291,14 @@
                 }
 
                 // Validar el número
-                const validaMonto = document.getElementById('monto');
-                if (validaMonto >= 5 || validaMonto <= 60) {
-                    // Procesamos la compra y guardamos los datos del ticket
-                    comprarLetra(opcionId, opcionNombre); // Pasar los parámetros necesarios
+                const validaMonto = $('#monto').val();
+                if (validaMonto >= 5) {
+                    if(validaMonto <= 60){
+                        // Procesamos la compra y guardamos los datos del ticket
+                        comprarLetra(opcionId, opcionNombre); // Pasar los parámetros necesarios
+                    }else { 
+                        errorNumero.textContent = 'Verificar Monto de Jugada';
+                    } 
                 } else { 
                     errorNumero.textContent = 'Verificar Monto de Jugada';
                 }
