@@ -291,15 +291,13 @@
                 }
 
                 // Validar el número
-                if (numero >= 5 || numero <= 60) {
-                    errorNumero.textContent = 'La jugada debe ser mayor 5 y menor a 60.'; 
-                } else {
-                    errorSpan.textContent = ''; // Limpiar el mensaje de error
+                const validaMonto = document.getElementById('monto');
+                if (validaMonto >= 5 || validaMonto <= 60) {
+                    // Procesamos la compra y guardamos los datos del ticket
+                    comprarLetra(opcionId, opcionNombre); // Pasar los parámetros necesarios
+                } else { 
+                    errorNumero.textContent = 'Verificar Monto de Jugada';
                 }
-        
-                // Procesamos la compra y guardamos los datos del ticket
-                comprarLetra(opcionId, opcionNombre); // Pasar los parámetros necesarios
-    
             };
         
             // Función para validar la entrada
