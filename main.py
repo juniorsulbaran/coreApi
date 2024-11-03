@@ -523,14 +523,13 @@ def hora(iniciar):
         if hora_actual == '15:00:00':
             sorteoletra = '03:00:00'
             sorteoLotto(sorteoletra,nowDate)
-
         if hora_actual == '16:00:00':
             sorteoletra = '04:00:00'
             sorteoLotto(sorteoletra,nowDate)
         if hora_actual == '17:00:00':
             sorteoletra = '05:00:00'
             sorteoLotto(sorteoletra,nowDate) 
-        if hora_actual == '18:45:00':
+        if hora_actual == '18:00:00':
             sorteoletra = '06:00:00'
             sorteoLotto(sorteoletra,nowDate)
         if hora_actual == '19:00:00':
