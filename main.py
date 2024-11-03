@@ -520,24 +520,24 @@ def hora(iniciar):
                 #('time', hora_actual, broadcast=True)    
         #emit('oculta', hora_actual, broadcast=True)
         #Iniciamos sorteo lottoLetra
-        if hora_actual == '19:30:00':
-            sorteoletra = '07:30:00'
+        if hora_actual == '15:00:00':
+            sorteoletra = '03:00:00'
             sorteoLotto(sorteoletra,nowDate)
 
-        if hora_actual == '19:35:00':
-            sorteoletra = '07:35:00'
+        if hora_actual == '16:00:00':
+            sorteoletra = '04:00:00'
             sorteoLotto(sorteoletra,nowDate)
-        if hora_actual == '19:40:00':
-            sorteoletra = '07:40:00'
+        if hora_actual == '17:00:00':
+            sorteoletra = '05:00:00'
             sorteoLotto(sorteoletra,nowDate) 
-        if hora_actual == '19:45:00':
-            sorteoletra = '07:45:00'
+        if hora_actual == '18:45:00':
+            sorteoletra = '06:00:00'
             sorteoLotto(sorteoletra,nowDate)
-        if hora_actual == '19:50:00':
-            sorteoletra = '07:50:00'
+        if hora_actual == '19:00:00':
+            sorteoletra = '07:00:00'
             sorteoLotto(sorteoletra,nowDate)
-        if hora_actual == '19:55:00':
-            sorteoletra = '07:55:00' 
+        if hora_actual == '20:00:00':
+            sorteoletra = '08:00:00' 
             sorteoLotto(sorteoletra,nowDate)
  
 @app.route('/', methods=['GET', 'POST'])
