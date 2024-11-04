@@ -58,7 +58,7 @@ def handle_disconnect():
  
 def sorteoLotto(sorteoletra,nowDate):
     print('Iniciado Sorteo Lotto')
-    time.sleep(30)
+    time.sleep(10)
     letra = cantarLetra()
     guardarLetra = guardoLetraGanadora(letra,sorteoletra,nowDate)
     listarResultadoLetra = resultadoLetra(nowDate)
@@ -300,7 +300,7 @@ def recibir_mensaje(msg,pote,nowDate):
                 horaSorteo = sorteoTaquilla
                 emit('limpiarSala','sala', broadcast=True)
             
-            if horaSorteo == '10:00:00':
+            if horaSorteo == '10:30:00':
                 sorteoNuevo = 3
                 sorteoTaquilla = BuscarSorteo(sorteoNuevo)
                 print('sorteo taquilla',sorteoTaquilla[0][0])
@@ -315,7 +315,7 @@ def recibir_mensaje(msg,pote,nowDate):
                 horaSorteo = sorteoTaquilla
                 emit('limpiarSala','sala', broadcast=True)
                 
-            if horaSorteo == '11:00:00':
+            if horaSorteo == '11:30:00':
                 sorteoNuevo = 4
                 sorteoTaquilla = BuscarSorteo(sorteoNuevo)
                 print('sorteo taquilla',sorteoTaquilla[0][0])
@@ -330,7 +330,7 @@ def recibir_mensaje(msg,pote,nowDate):
                 horaSorteo = sorteoTaquilla
                 emit('limpiarSala','sala', broadcast=True)
             
-            if horaSorteo == '12:00:00':
+            if horaSorteo == '12:30:00':
                 sorteoNuevo = 5
                 sorteoTaquilla = BuscarSorteo(sorteoNuevo)
                 print('sorteo taquilla',sorteoTaquilla[0][0])
@@ -345,7 +345,7 @@ def recibir_mensaje(msg,pote,nowDate):
                 horaSorteo = sorteoTaquilla
                 emit('limpiarSala','sala', broadcast=True)
                 
-            if horaSorteo == '13:00:00':
+            if horaSorteo == '13:30:00':
                 sorteoNuevo = 6
                 sorteoTaquilla = BuscarSorteo(sorteoNuevo)
                 print('sorteo taquilla',sorteoTaquilla[0][0])
@@ -360,7 +360,7 @@ def recibir_mensaje(msg,pote,nowDate):
                 horaSorteo = sorteoTaquilla
                 emit('limpiarSala','sala', broadcast=True)
                 
-            if horaSorteo == '14:00:00':
+            if horaSorteo == '14:30:00':
                 sorteoNuevo = 7
                 sorteoTaquilla = BuscarSorteo(sorteoNuevo)
                 print('sorteo taquilla',sorteoTaquilla[0][0])
@@ -375,7 +375,7 @@ def recibir_mensaje(msg,pote,nowDate):
                 horaSorteo = sorteoTaquilla
                 emit('limpiarSala','sala', broadcast=True)
                 
-            if horaSorteo == '15:00:00':
+            if horaSorteo == '15:30:00':
                 sorteoNuevo = 8
                 sorteoTaquilla = BuscarSorteo(sorteoNuevo)
                 print('sorteo taquilla',sorteoTaquilla[0][0])
@@ -390,7 +390,7 @@ def recibir_mensaje(msg,pote,nowDate):
                 horaSorteo = sorteoTaquilla
                 emit('limpiarSala','sala', broadcast=True)
                             
-            if horaSorteo == '16:00:00':
+            if horaSorteo == '16:30:00':
                 sorteoNuevo = 9
                 sorteoTaquilla = BuscarSorteo(sorteoNuevo)
                 print('sorteo taquilla',sorteoTaquilla[0][0])
@@ -405,7 +405,7 @@ def recibir_mensaje(msg,pote,nowDate):
                 horaSorteo = sorteoTaquilla
                 emit('limpiarSala','sala', broadcast=True)
                 
-            if horaSorteo == '19:00:00':
+            if horaSorteo == '19:30:00':
                 sorteoNuevo = 10
                 sorteoTaquilla = BuscarSorteo(sorteoNuevo)
                 print('sorteo taquilla',sorteoTaquilla[0][0])
@@ -420,7 +420,7 @@ def recibir_mensaje(msg,pote,nowDate):
                 horaSorteo = sorteoTaquilla
                 emit('limpiarSala','sala', broadcast=True)
                 
-            if horaSorteo == '20:00:00':
+            if horaSorteo == '20:17:00':
                 sorteoNuevo = 11
                 sorteoTaquilla = BuscarSorteo(sorteoNuevo)
                 print('sorteo taquilla',sorteoTaquilla[0][0])
@@ -435,7 +435,7 @@ def recibir_mensaje(msg,pote,nowDate):
                 horaSorteo = sorteoTaquilla
                 emit('limpiarSala','sala', broadcast=True)
                 
-            if horaSorteo == '21:06:00':
+            if horaSorteo == '21:00:00':
                 sorteoNuevo = 1
                 sorteoTaquilla = BuscarSorteo(sorteoNuevo)
                 print('sorteo taquilla',sorteoTaquilla[0][0])
@@ -515,28 +515,32 @@ def hora(iniciar):
         sorteoPendiente = pote[0][0]
         pote = pote[0][1]
         print('.')
-        if hora_actual == sorteoPendiente:
-            recibir_mensaje(sorteoPendiente,pote,nowDate) 
+        #if hora_actual == sorteoPendiente:
+           # recibir_mensaje(sorteoPendiente,pote,nowDate) 
                 #('time', hora_actual, broadcast=True)    
         #emit('oculta', hora_actual, broadcast=True)
+        print('ejecutar sorteo letra: ', hora_actual)
         #Iniciamos sorteo lottoLetra
+        if hora_actual == '13:00:00':
+            sorteoletra = '01:00:00'
+            sorteoLotto(sorteoletra,nowDate)
+        if hora_actual == '14:00:00':
+            sorteoletra = '02:00:00'
+            sorteoLotto(sorteoletra,nowDate)
         if hora_actual == '15:00:00':
             sorteoletra = '03:00:00'
-            sorteoLotto(sorteoletra,nowDate)
+            sorteoLotto(sorteoletra,nowDate) 
         if hora_actual == '16:00:00':
             sorteoletra = '04:00:00'
             sorteoLotto(sorteoletra,nowDate)
         if hora_actual == '17:00:00':
             sorteoletra = '05:00:00'
-            sorteoLotto(sorteoletra,nowDate) 
+            sorteoLotto(sorteoletra,nowDate)
         if hora_actual == '18:00:00':
-            sorteoletra = '06:00:00'
+            sorteoletra = '06:00:00' 
             sorteoLotto(sorteoletra,nowDate)
         if hora_actual == '19:00:00':
-            sorteoletra = '07:00:00'
-            sorteoLotto(sorteoletra,nowDate)
-        if hora_actual == '20:00:00':
-            sorteoletra = '08:00:00' 
+            sorteoletra = '07:00:00' 
             sorteoLotto(sorteoletra,nowDate)
  
 @app.route('/', methods=['GET', 'POST'])
