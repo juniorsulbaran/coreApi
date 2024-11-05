@@ -521,6 +521,16 @@ def hora(iniciar):
         #emit('oculta', hora_actual, broadcast=True)
         print('ejecutar sorteo letra: ', hora_actual)
         #Iniciamos sorteo lottoLetra
+        if hora_actual == '07:00:00':
+            sorteoNuevo = 1
+            idSorteo = 8
+            sorteoTaquilla = BuscarSorteoPendiente(sorteoNuevo)
+            print(sorteoTaquilla)
+            porcetajePote = int(pote) * 15 / 100
+            montoPote = int(pote) + porcetajePote
+            actualizoSorteo = updateSorteo(hora_actual,montoPote,sorteoTaquilla[0]['sorteo'],idSorteo)
+            sorteoletra = '07:00 am'
+            sorteoLotto(sorteoletra,nowDate)
         if hora_actual == '13:00:00':
             sorteoNuevo = 2
             idSorteo = 1
