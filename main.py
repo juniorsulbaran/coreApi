@@ -522,25 +522,74 @@ def hora(iniciar):
         print('ejecutar sorteo letra: ', hora_actual)
         #Iniciamos sorteo lottoLetra
         if hora_actual == '13:00:00':
-            sorteoletra = '01:00:00'
+            sorteoNuevo = 2
+            idSorteo = 1
+            sorteoTaquilla = BuscarSorteoPendiente(sorteoNuevo)
+            print(sorteoTaquilla)
+            porcetajePote = int(pote) * 15 / 100
+            montoPote = int(pote) + porcetajePote
+            actualizoSorteo = updateSorteo(hora_actual,montoPote,sorteoTaquilla[0]['sorteo'],idSorteo)
+            sorteoletra = '01:00 pm'
             sorteoLotto(sorteoletra,nowDate)
         if hora_actual == '14:00:00':
-            sorteoletra = '02:00:00'
+            sorteoNuevo = 3
+            idSorteo = 2
+            sorteoTaquilla = BuscarSorteoPendiente(sorteoNuevo)
+            print(sorteoTaquilla)
+            porcetajePote = int(pote) * 15 / 100
+            montoPote = int(pote) + porcetajePote
+            actualizoSorteo = updateSorteo(hora_actual,montoPote,sorteoTaquilla[0]['sorteo'],idSorteo)
+            sorteoletra = '02:00 pm'
             sorteoLotto(sorteoletra,nowDate)
         if hora_actual == '15:00:00':
-            sorteoletra = '03:00:00'
+            sorteoNuevo = 4
+            idSorteo = 3
+            sorteoTaquilla = BuscarSorteoPendiente(sorteoNuevo)
+            print(sorteoTaquilla)
+            porcetajePote = int(pote) * 15 / 100
+            montoPote = int(pote) + porcetajePote
+            actualizoSorteo = updateSorteo(hora_actual,montoPote,sorteoTaquilla[0]['sorteo'],idSorteo)
+            sorteoletra = '03:00 pm'
             sorteoLotto(sorteoletra,nowDate) 
         if hora_actual == '16:00:00':
-            sorteoletra = '04:00:00'
+            sorteoNuevo = 5
+            idSorteo = 4
+            sorteoTaquilla = BuscarSorteoPendiente(sorteoNuevo)
+            print(sorteoTaquilla)
+            porcetajePote = int(pote) * 15 / 100
+            montoPote = int(pote) + porcetajePote
+            actualizoSorteo = updateSorteo(hora_actual,montoPote,sorteoTaquilla[0]['sorteo'],idSorteo)
+            sorteoletra = '04:00 pm'
             sorteoLotto(sorteoletra,nowDate)
         if hora_actual == '17:00:00':
-            sorteoletra = '05:00:00'
+            sorteoNuevo = 6
+            idSorteo = 5
+            sorteoTaquilla = BuscarSorteoPendiente(sorteoNuevo)
+            print(sorteoTaquilla)
+            porcetajePote = int(pote) * 15 / 100
+            montoPote = int(pote) + porcetajePote
+            actualizoSorteo = updateSorteo(hora_actual,montoPote,sorteoTaquilla[0]['sorteo'],idSorteo)
+            sorteoletra = '05:00 pm'
             sorteoLotto(sorteoletra,nowDate)
         if hora_actual == '18:00:00':
-            sorteoletra = '06:00:00' 
+            sorteoNuevo = 7
+            idSorteo = 6
+            sorteoTaquilla = BuscarSorteoPendiente(sorteoNuevo)
+            print(sorteoTaquilla)
+            porcetajePote = int(pote) * 15 / 100
+            montoPote = int(pote) + porcetajePote
+            actualizoSorteo = updateSorteo(hora_actual,montoPote,sorteoTaquilla[0]['sorteo'],idSorteo)
+            sorteoletra = '06:00 pm' 
             sorteoLotto(sorteoletra,nowDate)
         if hora_actual == '19:00:00':
-            sorteoletra = '07:00:00' 
+            sorteoNuevo = 1
+            idSorteo = 7
+            sorteoTaquilla = BuscarSorteoPendiente(sorteoNuevo)
+            print(sorteoTaquilla)
+            porcetajePote = int(pote) * 15 / 100
+            montoPote = int(pote) + porcetajePote
+            actualizoSorteo = updateSorteo(hora_actual,montoPote,sorteoTaquilla[0]['sorteo'],idSorteo)
+            sorteoletra = '07:00 pm' 
             sorteoLotto(sorteoletra,nowDate)
  
 @app.route('/', methods=['GET', 'POST'])
@@ -1040,6 +1089,6 @@ if __name__=="__main__":
     fechaHora = fecha()
     #app.run(debug=True)
     #socketio.run(app)
-    socketio.run(app,'192.168.1.128',5000)
+    socketio.run(app,'192.168.1.127',5000)
     #socketio.run(app,'10.0.0.3',80)
     #app.run('10.0.0.2', 80, debug=True)

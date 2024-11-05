@@ -307,12 +307,12 @@ def cartonPremiado(horaSorteo,nowDate,premioB,premioI,premioN,premioG,premioO):
     return 'guardado Con exito'
 
 #actualizamos los sorteos
-def updateSorteo(horaSorteo,pote,sorteoTaquilla):
+def updateSorteo(horaSorteo,pote,sorteoTaquilla,idSorteo):
         mydb = conectar_base_datos()
         mycursor = mydb.cursor()
         jugado = 1
-        consulta = "UPDATE sorteos SET status = %s WHERE horaSorteo = %s"
-        datos = (jugado, horaSorteo)
+        consulta = "UPDATE sorteos SET status = %s WHERE id = %s"
+        datos = (jugado, idSorteo)
         # Ejecutar la consulta con las variables
         mycursor.execute(consulta, datos)
         # Hacer commit para aplicar los cambios
@@ -361,6 +361,27 @@ def BuscarSorteo():
         }
         ListaSorteo.append(dicSorteo)
     return ListaSorteo
+
+#conulto el nuevo sorteo para enviar a la taquilla
+def BuscarSorteoPendiente(sorteoNuevo):
+    mydb = conectar_base_datos()
+    mycursor = mydb.cursor()
+    mycursor.execute("SELECT * FROM sorteos WHERE id = '%s'" % sorteoNuevo)
+    result = mycursor.fetchall()
+    mydb.close
+    dicSorteo=''
+    ListaSorteo=[]
+    print('Lista Sorteos: ',result)
+    for items in result:
+        dicSorteo = {
+            'id': items[0],
+            'sorteo': items[1],
+            'status': items[2]
+        }
+        ListaSorteo.append(dicSorteo)
+    return ListaSorteo
+
+
 
 def generarTicketLetra(datosTicketLetra,hora_12h,nowDate):
     referencia = ''
