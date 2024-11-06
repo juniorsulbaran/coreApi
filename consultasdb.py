@@ -5,6 +5,7 @@
 #  Año:           2024                                                                                  #
 #*******************************************************************************************************# 
 
+from flask import Flask, jsonify, request,render_template,redirect,url_for,flash
 import mysql.connector
 from conexiones import *
 import json
@@ -33,7 +34,6 @@ def resultadoLetra(nowDate):
             'resultado':'Sin resultados'
             } 
     return result
-
 
 # Guardar los cartones creados por sorteo
 def guardarCartone(carton):
