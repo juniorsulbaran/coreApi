@@ -598,7 +598,7 @@ def hora(iniciar):
             sorteoletra = '06:00 pm' 
             sorteoLotto(sorteoletra,nowDate)
         if hora_actual == '19:00:00':
-            sorteoNuevo = 8
+            sorteoNuevo = 9
             idSorteo = 7
             sorteoTaquilla = BuscarSorteoPendiente(sorteoNuevo)
             print(sorteoTaquilla)
@@ -606,6 +606,26 @@ def hora(iniciar):
             montoPote = int(pote) + porcetajePote
             actualizoSorteo = updateSorteo(hora_actual,montoPote,sorteoTaquilla[0]['sorteo'],idSorteo)
             sorteoletra = '07:00 pm' 
+            sorteoLotto(sorteoletra,nowDate)
+        if hora_actual == '20:00:00':
+            sorteoNuevo = 10
+            idSorteo = 9
+            sorteoTaquilla = BuscarSorteoPendiente(sorteoNuevo)
+            print(sorteoTaquilla)
+            porcetajePote = int(pote) * 15 / 100
+            montoPote = int(pote) + porcetajePote
+            actualizoSorteo = updateSorteo(hora_actual,montoPote,sorteoTaquilla[0]['sorteo'],idSorteo)
+            sorteoletra = '08:00 pm' 
+            sorteoLotto(sorteoletra,nowDate)
+        if hora_actual == '21:00:00':
+            sorteoNuevo = 8
+            idSorteo = 10
+            sorteoTaquilla = BuscarSorteoPendiente(sorteoNuevo)
+            print(sorteoTaquilla)
+            porcetajePote = int(pote) * 15 / 100
+            montoPote = int(pote) + porcetajePote
+            actualizoSorteo = updateSorteo(hora_actual,montoPote,sorteoTaquilla[0]['sorteo'],idSorteo)
+            sorteoletra = '09:00 pm' 
             sorteoLotto(sorteoletra,nowDate)
  
 @app.route('/', methods=['GET', 'POST'])
