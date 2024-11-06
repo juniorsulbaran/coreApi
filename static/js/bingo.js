@@ -281,7 +281,6 @@ function letraCantada(){
   return false; 
 }
 
-
 socket.emit('fecha', 'Fecha Actual');
 
 socket.on('date',(msg) =>{

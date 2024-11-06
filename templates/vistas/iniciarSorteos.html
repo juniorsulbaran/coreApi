@@ -88,7 +88,7 @@
                     <div class="card-body">
                         <h1>Iniciar Sistema</h1>
                     </div>
-                    <button type="button" onclick="iniciarSorteo()" class="btn btn-primary">Inicio</button>
+                    <button type="button" id="iniciarSorteos" onclick="iniciarSorteo()" class="btn btn-primary">Inicio</button>
                 </div>
             </div>
             <div class="col">
@@ -153,6 +153,7 @@
     //iniciamos los sorteos
     const socket = io();
     function iniciarSorteo(){
+        document.getElementById('iniciarSorteos').disabled = true;
         console.log('iniciarSorteo');
         socket.emit('iniciarSistema','Sistema Iniciado');
         $.ajax({

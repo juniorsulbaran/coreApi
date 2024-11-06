@@ -481,6 +481,7 @@ def hora(hora):
         hora_12h = hora_objeto.strftime("%I:%M:%S %p")       
         emit('time', hora_12h, broadcast=True)
         
+        
 #fecha del servido
 @socketio.on('fecha')
 def fecha(fecha):
@@ -521,6 +522,11 @@ def hora(iniciar):
         #emit('oculta', hora_actual, broadcast=True)
         #print('ejecutar sorteo letra: ', hora_actual)
         #Iniciamos sorteo lottoLetra
+        pote = sorteopendiente()
+        sorteoPendiente = pote[0][0]
+        pote = pote[0][1]
+        print('pendente para ejecutar sorteo')
+        #sorteo letras
         if hora_actual == '07:00:00':
             sorteoNuevo = 1
             idSorteo = 8
@@ -571,7 +577,7 @@ def hora(iniciar):
             actualizoSorteo = updateSorteo(hora_actual,montoPote,sorteoTaquilla[0]['sorteo'],idSorteo)
             sorteoletra = '04:00 pm'
             sorteoLotto(sorteoletra,nowDate)
-        if hora_actual == '17:00:00':
+        if hora_actual == '17:35:00':
             sorteoNuevo = 6
             idSorteo = 5
             sorteoTaquilla = BuscarSorteoPendiente(sorteoNuevo)
