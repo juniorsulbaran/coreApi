@@ -58,8 +58,8 @@ def handle_disconnect():
     print('Cliente desconectado')  
   
 def sorteoLotto(sorteoletra,nowDate):
-    print('Iniciado Sorteo Lotto')
-    time.sleep(10)
+    print('Iniciado Sorteo Lotto', sorteoletra, nowDate )
+    time.sleep(3)
     letra = cantarLetra()
     guardarLetra = guardoLetraGanadora(letra,sorteoletra,nowDate)
     listarResultadoLetra = resultadoLetra(nowDate)
@@ -461,6 +461,7 @@ def recibir_mensaje(msg,pote,nowDate):
 @socketio.on('hora')
 def hora(hora):
     print(hora)
+    # Inicia la alarma
     while True:
         time.sleep(1)
         listarResultadoLetra = resultadoLetra(nowDate)
@@ -504,131 +505,132 @@ def horaSorteo(horaSorteo,montoPote):
     }
     print(actualizoSorteo)
     emit('sorteo', datos, broadcast=True)
-      
+    
+    
+def alarma_horaria():
+    while True:
+        # Obtiene la hora actual
+        ahora = datetime.now()
+        print("hora es:", ahora.hour , ahora.minute,  ahora.second)
+        # Comprueba si es la hora exacta (minuto y segundo son 0)
+        if ahora.minute == 0 and ahora.second == 0:
+            pote = sorteopendiente()
+            sorteoPendiente = pote[0][0]
+            pote = pote[0][1]
+            print('pendente para ejecutar sorteo')
+            hora_actual = str(ahora.hour )+':'+ str(ahora.minute) + ':' + str(ahora.second)
+            print("¡Alarma! ¡Es hora del sorteo!", hora_actual)
+            #sorteo letras
+            if hora_actual == '07:0:0':
+                sorteoNuevo = 1
+                idSorteo = 8
+                sorteoTaquilla = BuscarSorteoPendiente(sorteoNuevo)
+                print(sorteoTaquilla)
+                porcetajePote = int(pote) * 15 / 100
+                montoPote = int(pote) + porcetajePote
+                actualizoSorteo = updateSorteo(hora_actual,montoPote,sorteoTaquilla[0]['sorteo'],idSorteo)
+                sorteoletra = '07:00 am'
+                sorteoLotto(sorteoletra,nowDate)
+            if hora_actual == '13:0:0':
+                sorteoNuevo = 2
+                idSorteo = 1
+                sorteoTaquilla = BuscarSorteoPendiente(sorteoNuevo)
+                print(sorteoTaquilla)
+                porcetajePote = int(pote) * 15 / 100
+                montoPote = int(pote) + porcetajePote
+                actualizoSorteo = updateSorteo(hora_actual,montoPote,sorteoTaquilla[0]['sorteo'],idSorteo)
+                sorteoletra = '01:00 pm'
+                sorteoLotto(sorteoletra,nowDate)
+            if hora_actual == '14:0:0':
+                sorteoNuevo = 3
+                idSorteo = 2
+                sorteoTaquilla = BuscarSorteoPendiente(sorteoNuevo)
+                print(sorteoTaquilla)
+                porcetajePote = int(pote) * 15 / 100
+                montoPote = int(pote) + porcetajePote
+                actualizoSorteo = updateSorteo(hora_actual,montoPote,sorteoTaquilla[0]['sorteo'],idSorteo)
+                sorteoletra = '02:00 pm'
+                sorteoLotto(sorteoletra,nowDate)
+            if hora_actual == '15:56:0':
+                sorteoNuevo = 4
+                idSorteo = 3
+                sorteoTaquilla = BuscarSorteoPendiente(sorteoNuevo)
+                print(sorteoTaquilla)
+                porcetajePote = int(pote) * 15 / 100
+                montoPote = int(pote) + porcetajePote
+                actualizoSorteo = updateSorteo(hora_actual,montoPote,sorteoTaquilla[0]['sorteo'],idSorteo)
+                sorteoletra = '03:00 pm'
+                sorteoLotto(sorteoletra,nowDate) 
+            if hora_actual == '16:0:0':
+                sorteoNuevo = 5
+                idSorteo = 4
+                sorteoTaquilla = BuscarSorteoPendiente(sorteoNuevo)
+                print(sorteoTaquilla)
+                porcetajePote = int(pote) * 15 / 100
+                montoPote = int(pote) + porcetajePote
+                actualizoSorteo = updateSorteo(hora_actual,montoPote,sorteoTaquilla[0]['sorteo'],idSorteo)
+                sorteoletra = '04:00 pm'
+                sorteoLotto(sorteoletra,nowDate)
+            if hora_actual == '17:0:0':
+                sorteoNuevo = 6
+                idSorteo = 5
+                sorteoTaquilla = BuscarSorteoPendiente(sorteoNuevo)
+                print(sorteoTaquilla)
+                porcetajePote = int(pote) * 15 / 100
+                montoPote = int(pote) + porcetajePote
+                actualizoSorteo = updateSorteo(hora_actual,montoPote,sorteoTaquilla[0]['sorteo'],idSorteo)
+                sorteoletra = '05:00 pm'
+                sorteoLotto(sorteoletra,nowDate)
+            if hora_actual == '18:0:0':
+                sorteoNuevo = 7
+                idSorteo = 6
+                sorteoTaquilla = BuscarSorteoPendiente(sorteoNuevo)
+                print(sorteoTaquilla)
+                porcetajePote = int(pote) * 15 / 100
+                montoPote = int(pote) + porcetajePote
+                actualizoSorteo = updateSorteo(hora_actual,montoPote,sorteoTaquilla[0]['sorteo'],idSorteo)
+                sorteoletra = '06:00 pm' 
+                sorteoLotto(sorteoletra,nowDate)
+            if hora_actual == '19:0:0':
+                sorteoNuevo = 9
+                idSorteo = 7
+                sorteoTaquilla = BuscarSorteoPendiente(sorteoNuevo)
+                print(sorteoTaquilla)
+                porcetajePote = int(pote) * 15 / 100
+                montoPote = int(pote) + porcetajePote
+                actualizoSorteo = updateSorteo(hora_actual,montoPote,sorteoTaquilla[0]['sorteo'],idSorteo)
+                sorteoletra = '07:00 pm' 
+                sorteoLotto(sorteoletra,nowDate)
+            if hora_actual == '20:0:0':
+                sorteoNuevo = 10
+                idSorteo = 9
+                sorteoTaquilla = BuscarSorteoPendiente(sorteoNuevo)
+                print(sorteoTaquilla)
+                porcetajePote = int(pote) * 15 / 100
+                montoPote = int(pote) + porcetajePote
+                actualizoSorteo = updateSorteo(hora_actual,montoPote,sorteoTaquilla[0]['sorteo'],idSorteo)
+                sorteoletra = '08:00 pm' 
+                sorteoLotto(sorteoletra,nowDate)
+            if hora_actual == '21:0:0':
+                sorteoNuevo = 8
+                idSorteo = 10
+                sorteoTaquilla = BuscarSorteoPendiente(sorteoNuevo)
+                print(sorteoTaquilla)
+                porcetajePote = int(pote) * 15 / 100
+                montoPote = int(pote) + porcetajePote
+                actualizoSorteo = updateSorteo(hora_actual,montoPote,sorteoTaquilla[0]['sorteo'],idSorteo)
+                sorteoletra = '09:00 pm' 
+                sorteoLotto(sorteoletra,nowDate)
+                reset = resetSorteosDia()
+                print(reset)
+            time.sleep(60)  # Espera un minuto para evitar múltiples alarmas en el mismo minuto
+        time.sleep(1)  # Espera un segundo antes de volver a comprobar
+     
 #Hora del servidor
 @socketio.on('iniciarSistema')
 def hora(iniciar):
     print(iniciar)
-    while True:
-        time.sleep(1)
-        hora_actual_venezuela = datetime.now(tz_venezuela)
-        hora_actual = hora_actual_venezuela.strftime('%H:%M:%S') 
-        pote = sorteopendiente()
-        sorteoPendiente = pote[0][0]
-        pote = pote[0][1]
-        #if hora_actual == sorteoPendiente:
-           # recibir_mensaje(sorteoPendiente,pote,nowDate) 
-                #('time', hora_actual, broadcast=True)    
-        #emit('oculta', hora_actual, broadcast=True)
-        #print('ejecutar sorteo letra: ', hora_actual)
-        #Iniciamos sorteo lottoLetra
-        pote = sorteopendiente()
-        sorteoPendiente = pote[0][0]
-        pote = pote[0][1]
-        print('pendente para ejecutar sorteo')
-        #sorteo letras
-        if hora_actual == '07:00:00':
-            sorteoNuevo = 1
-            idSorteo = 8
-            sorteoTaquilla = BuscarSorteoPendiente(sorteoNuevo)
-            print(sorteoTaquilla)
-            porcetajePote = int(pote) * 15 / 100
-            montoPote = int(pote) + porcetajePote
-            actualizoSorteo = updateSorteo(hora_actual,montoPote,sorteoTaquilla[0]['sorteo'],idSorteo)
-            sorteoletra = '07:00 am'
-            sorteoLotto(sorteoletra,nowDate)
-        if hora_actual == '13:00:00':
-            sorteoNuevo = 2
-            idSorteo = 1
-            sorteoTaquilla = BuscarSorteoPendiente(sorteoNuevo)
-            print(sorteoTaquilla)
-            porcetajePote = int(pote) * 15 / 100
-            montoPote = int(pote) + porcetajePote
-            actualizoSorteo = updateSorteo(hora_actual,montoPote,sorteoTaquilla[0]['sorteo'],idSorteo)
-            sorteoletra = '01:00 pm'
-            sorteoLotto(sorteoletra,nowDate)
-        if hora_actual == '14:00:00':
-            sorteoNuevo = 3
-            idSorteo = 2
-            sorteoTaquilla = BuscarSorteoPendiente(sorteoNuevo)
-            print(sorteoTaquilla)
-            porcetajePote = int(pote) * 15 / 100
-            montoPote = int(pote) + porcetajePote
-            actualizoSorteo = updateSorteo(hora_actual,montoPote,sorteoTaquilla[0]['sorteo'],idSorteo)
-            sorteoletra = '02:00 pm'
-            sorteoLotto(sorteoletra,nowDate)
-        if hora_actual == '15:00:00':
-            sorteoNuevo = 4
-            idSorteo = 3
-            sorteoTaquilla = BuscarSorteoPendiente(sorteoNuevo)
-            print(sorteoTaquilla)
-            porcetajePote = int(pote) * 15 / 100
-            montoPote = int(pote) + porcetajePote
-            actualizoSorteo = updateSorteo(hora_actual,montoPote,sorteoTaquilla[0]['sorteo'],idSorteo)
-            sorteoletra = '03:00 pm'
-            sorteoLotto(sorteoletra,nowDate) 
-        if hora_actual == '16:00:00':
-            sorteoNuevo = 5
-            idSorteo = 4
-            sorteoTaquilla = BuscarSorteoPendiente(sorteoNuevo)
-            print(sorteoTaquilla)
-            porcetajePote = int(pote) * 15 / 100
-            montoPote = int(pote) + porcetajePote
-            actualizoSorteo = updateSorteo(hora_actual,montoPote,sorteoTaquilla[0]['sorteo'],idSorteo)
-            sorteoletra = '04:00 pm'
-            sorteoLotto(sorteoletra,nowDate)
-        if hora_actual == '17:35:00':
-            sorteoNuevo = 6
-            idSorteo = 5
-            sorteoTaquilla = BuscarSorteoPendiente(sorteoNuevo)
-            print(sorteoTaquilla)
-            porcetajePote = int(pote) * 15 / 100
-            montoPote = int(pote) + porcetajePote
-            actualizoSorteo = updateSorteo(hora_actual,montoPote,sorteoTaquilla[0]['sorteo'],idSorteo)
-            sorteoletra = '05:00 pm'
-            sorteoLotto(sorteoletra,nowDate)
-        if hora_actual == '18:00:00':
-            sorteoNuevo = 7
-            idSorteo = 6
-            sorteoTaquilla = BuscarSorteoPendiente(sorteoNuevo)
-            print(sorteoTaquilla)
-            porcetajePote = int(pote) * 15 / 100
-            montoPote = int(pote) + porcetajePote
-            actualizoSorteo = updateSorteo(hora_actual,montoPote,sorteoTaquilla[0]['sorteo'],idSorteo)
-            sorteoletra = '06:00 pm' 
-            sorteoLotto(sorteoletra,nowDate)
-        if hora_actual == '19:00:00':
-            sorteoNuevo = 9
-            idSorteo = 7
-            sorteoTaquilla = BuscarSorteoPendiente(sorteoNuevo)
-            print(sorteoTaquilla)
-            porcetajePote = int(pote) * 15 / 100
-            montoPote = int(pote) + porcetajePote
-            actualizoSorteo = updateSorteo(hora_actual,montoPote,sorteoTaquilla[0]['sorteo'],idSorteo)
-            sorteoletra = '07:00 pm' 
-            sorteoLotto(sorteoletra,nowDate)
-        if hora_actual == '20:00:00':
-            sorteoNuevo = 10
-            idSorteo = 9
-            sorteoTaquilla = BuscarSorteoPendiente(sorteoNuevo)
-            print(sorteoTaquilla)
-            porcetajePote = int(pote) * 15 / 100
-            montoPote = int(pote) + porcetajePote
-            actualizoSorteo = updateSorteo(hora_actual,montoPote,sorteoTaquilla[0]['sorteo'],idSorteo)
-            sorteoletra = '08:00 pm' 
-            sorteoLotto(sorteoletra,nowDate)
-        if hora_actual == '21:00:00':
-            sorteoNuevo = 8
-            idSorteo = 10
-            sorteoTaquilla = BuscarSorteoPendiente(sorteoNuevo)
-            print(sorteoTaquilla)
-            porcetajePote = int(pote) * 15 / 100
-            montoPote = int(pote) + porcetajePote
-            actualizoSorteo = updateSorteo(hora_actual,montoPote,sorteoTaquilla[0]['sorteo'],idSorteo)
-            sorteoletra = '09:00 pm' 
-            sorteoLotto(sorteoletra,nowDate)
-            reset = resetSorteosDia()
-            print(reset)
+    alarma_horaria()
  
 @app.route('/', methods=['GET', 'POST'])
 def index():
@@ -1088,10 +1090,10 @@ def fecha():
     print(' * conectado DB ')
     return now
  
-if __name__=="__main__":
-    fechaHora = fecha()
+if __name__=="__main__": 
     #app.run(debug=True)
     #socketio.run(app)
     socketio.run(app,'192.168.1.127',5000)
+    fechaHora = fecha()
     #socketio.run(app,'10.0.0.3',80)
     #app.run('10.0.0.2', 80, debug=True)
