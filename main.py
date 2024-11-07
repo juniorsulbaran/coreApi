@@ -627,6 +627,8 @@ def hora(iniciar):
             actualizoSorteo = updateSorteo(hora_actual,montoPote,sorteoTaquilla[0]['sorteo'],idSorteo)
             sorteoletra = '09:00 pm' 
             sorteoLotto(sorteoletra,nowDate)
+            reset = resetSorteosDia()
+            print(reset)
  
 @app.route('/', methods=['GET', 'POST'])
 def index():

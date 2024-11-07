@@ -342,6 +342,18 @@ def sorteoReprogramado(sorteoTaquilla,pote):
         mydb.commit()
         mydb.close
         return 'Sorteos Actualizado'
+ 
+def resetSorteosDia():
+    mydb = conectar_base_datos()
+    mycursor = mydb.cursor()
+    status = 0
+    consulta = "UPDATE sorteos SET status = %s WHERE status = %s"
+    datos = (status,1)
+    mycursor.execute(consulta, datos)
+    # Hacer commit para aplicar los cambios
+    mydb.commit()
+    mydb.close
+    return 'Sorteos Inicializados'
     
 #conulto el nuevo sorteo para enviar a la taquilla
 def BuscarSorteo():
