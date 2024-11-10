@@ -880,25 +880,29 @@ def crear_cartones():
 def compraBoletoLetra():
     datosTicketLetra = request.form
     print('vendo la opcion',datosTicketLetra['monto'])
-    sorteos = BuscarSorteo()
-    for items in sorteos:
-        if int(datosTicketLetra['sorteo']) == int(items['id']):
-            sorteoOpcion = items['sorteo']
-    print("Sorteo Opcion: ",sorteoOpcion)
-    # Formatear la hora en formato 12H
-    hora_12h = datetime.now(tz_venezuela)   
-    print('Hora ticket: ',hora_12h.strftime("%I:%M:%S %p"))
-    hora_12h = hora_12h.strftime("%I:%M:%S %p")
-    serialTicket = generarTicketLetra(datosTicketLetra,hora_12h,nowDate)
-    # Filtrar caracteres
-    cadena_limpia = ''.join(filter(lambda x: x.isalnum() or x.isspace(), hora_12h)) 
-    numeros = [serialTicket, cadena_limpia]
-    # Convertir a cadenas y concatenar 
-    resultado = ''.join(map(str, numeros))
-    formatoSerial = resultado
-    if serialTicket !='ok':
-        return render_template('vistas/ticket.html',datosTicketLetra=datosTicketLetra,hora_12h=hora_12h,nowDate=nowDate,formatoSerial=formatoSerial,sorteoOpcion=sorteoOpcion )
-
+    #validamos que no se ingrese una referencia duplicada
+    resultadoReferencia = buscarReferenciaLetra(datosTicketLetra['referencia'])
+    if resultadoReferencia == []:
+        sorteos = BuscarSorteo()
+        for items in sorteos:
+            if int(datosTicketLetra['sorteo']) == int(items['id']):
+                sorteoOpcion = items['sorteo']
+        print("Sorteo Opcion: ",sorteoOpcion)
+        # Formatear la hora en formato 12H
+        hora_12h = datetime.now(tz_venezuela)   
+        print('Hora ticket: ',hora_12h.strftime("%I:%M:%S %p"))
+        hora_12h = hora_12h.strftime("%I:%M:%S %p")
+        serialTicket = generarTicketLetra(datosTicketLetra,hora_12h,nowDate)
+        # Filtrar caracteres
+        cadena_limpia = ''.join(filter(lambda x: x.isalnum() or x.isspace(), hora_12h)) 
+        numeros = [serialTicket, cadena_limpia]
+        # Convertir a cadenas y concatenar 
+        resultado = ''.join(map(str, numeros))
+        formatoSerial = resultado
+        if serialTicket !='ok':
+            return render_template('vistas/ticket.html',datosTicketLetra=datosTicketLetra,hora_12h=hora_12h,nowDate=nowDate,formatoSerial=formatoSerial,sorteoOpcion=sorteoOpcion )
+    else:           
+        return 'referencia duplicada'
 #comprar boleto letra
 @app.route("/comprarLetra", methods=['POST'])
 def comprarLetra():

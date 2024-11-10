@@ -451,14 +451,15 @@
                 // Cierra los modales después de procesar la compra
                 modalTicket.hide(); 
                 miModal.hide();
-                $('#container').html(response);
- 
+                if(response == 'referencia duplicada'){
+                    errorNumero.textContent = 'Numero de referencia ya existe'; 
+                    document.getElementById('procesarCompra').disabled = false;    
+                }else{
+                    $('#container').html(response);
+                }
             },
             error: function(error) {
-                if(error == 'referencia duplicada'){
-                    console.log(error);
-                    errorNumero.textContent = 'Numero de referencia ya existe';     
-                }    
+                console.log(error);            
             }
         });
         return false; 
