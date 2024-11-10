@@ -419,6 +419,7 @@
 
     // Función para comprar letra
     function compraBoletoLetra(opcionId, opcionNombre) {
+        document.getElementById('procesarCompra').disabled = true;
         const modalTicket = new bootstrap.Modal(document.getElementById('modalTicket'));
         const miModal = new bootstrap.Modal(document.getElementById('miModal'));
         const url = '/compraBoletoLetra';

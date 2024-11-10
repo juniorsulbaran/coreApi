@@ -17,7 +17,7 @@ import pytz
 from datetime import datetime, timedelta
 import hashlib
 #variables sorteo letra
-
+contadorSorteo = 0
 sorteoletra = ''
 hora_12h=''
 # Definir la zona horaria de Venezuela
@@ -510,7 +510,7 @@ def horaSorteo(horaSorteo,montoPote):
 def alarma_horaria():
     while True:
         # Obtiene la hora actual
-        ahora = datetime.now()
+        ahora = datetime.now(tz_venezuela)
         print("hora es:", ahora.hour , ahora.minute,  ahora.second)
         # Comprueba si es la hora exacta (minuto y segundo son 0)
         if ahora.minute == 0 and ahora.second == 0:
@@ -630,8 +630,49 @@ def alarma_horaria():
 @socketio.on('iniciarSistema')
 def hora(iniciar):
     print(iniciar)
-    alarma_horaria()
- 
+    hora_actual = ''
+    if iniciar == 'Sistema Iniciado':
+        # Obtener el pote y el sorteo pendiente
+        pote = sorteopendiente()
+        sorteoPendiente = pote[0][0]
+        pote = pote[0][1]
+    
+        # Incrementar el contador de sorteos
+        global contadorSorteo
+        contadorSorteo += 1
+        idSorteo = contadorSorteo #corresponde al id del sorteo actual
+        contadorSorteo += 1
+        sorteoNuevo = contadorSorteo #corresponde al id del nuevo sorteo
+        contadorSorteo -= 1
+        print('contadorSorteo:',contadorSorteo)
+        # Buscar la hora del sorteo
+        buscarSorteoHora = BuscarSorteo()
+        sorteoActual = None  # Inicializar la variable para el sorteo actual
+
+        # Encontrar el sorteo actual basado en el id
+        for itemSorteo in buscarSorteoHora:
+            if itemSorteo['id'] == idSorteo:
+                sorteoActual = itemSorteo['sorteo'] 
+                break  # Salir del bucle una vez encontrado
+
+        # Obtener el sorteo de taquilla pendiente
+        sorteoTaquilla = BuscarSorteoPendiente(sorteoNuevo)
+        print(sorteoTaquilla)
+
+        # Calcular el porcentaje del pote
+        porcentajePote = int(pote) * 15 / 100
+        montoPote = int(pote) + porcentajePote
+        print('sorteoTaquilla:',sorteoTaquilla)
+        # Actualizar el sorteo
+        actualizoSorteo = updateSorteo(hora_actual, montoPote, sorteoTaquilla[0]['sorteo'], idSorteo)
+        # Realizar el sorteo de la letra
+        sorteoletra = sorteoActual
+        sorteoLotto(sorteoletra, nowDate)
+        if sorteoletra == '09:00 pm':
+            reset = resetSorteosDia()
+            contadorSorteo = 0
+            print(reset)
+            
 @app.route('/', methods=['GET', 'POST'])
 def index():
     return render_template('index.html')
