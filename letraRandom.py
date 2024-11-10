@@ -1,7 +1,7 @@
 import random
 #Generamos aleatorios
 def cantarLetra():
-    aleatorios = random.sample(range(1,27),1)
+    aleatorios = random.sample(range(1,28),1)
     #numero letra B
     if aleatorios[0] >= 1 and aleatorios[0] <= 27:
         if aleatorios[0]== 1:
