@@ -326,11 +326,11 @@ socket.on('resultadoLetraFecha',(msg) =>{
     // Crear un elemento de imagen
     const imagen = document.createElement('img');
     imagen.src = 'static/image/letras/' + dato[1] + '.png'; // Reemplaza con la nueva ruta de la imagen
-    imagen.style.width = '60px'; // Definir el ancho de la imagen
-    imagen.style.height = '40px'; // Mantener la proporción de la imagen
+    imagen.style.width = '120px'; // Definir el ancho de la imagen
+    imagen.style.height = '100px'; // Mantener la proporción de la imagen
     // Agregar la imagen a la columna
     columna.appendChild(imagen);
-    columna.innerHTML += `<p style="font-size:10px;">${dato[2]}</p>`;
+    columna.innerHTML += `<strong style="font-size:18px;">${dato[2]}</strong>`;
     // Agregar la columna a la fila
     filaContenido.appendChild(columna);
 
