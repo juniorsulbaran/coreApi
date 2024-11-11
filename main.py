@@ -637,13 +637,22 @@ def hora(iniciar):
         sorteoPendiente = pote[0][0]
         pote = pote[0][1]
     
-        # Incrementar el contador de sorteos
+        # asigno el valor del id del proximo sorteo 
         global contadorSorteo
-        contadorSorteo += 1
+        sorteoEjecutado = sorteosEjecutado()
+        print('Cantidad sorteos ejecutados: ',sorteoEjecutado[0])
+        if sorteoEjecutado[0] == 0:
+            print('no se ha ejecutado sorteo')
+            contadorSorteo += 1
+        else:
+            print('trae la cantidad de sorteos ejecutados y se asignan al contador')
+            contadorSorteo = sorteoEjecutado[0]
+            contadorSorteo += 1
+        
         idSorteo = contadorSorteo #corresponde al id del sorteo actual
         contadorSorteo += 1
         sorteoNuevo = contadorSorteo #corresponde al id del nuevo sorteo
-        contadorSorteo -= 1
+    
         print('contadorSorteo:',contadorSorteo)
         # Buscar la hora del sorteo
         buscarSorteoHora = BuscarSorteo()

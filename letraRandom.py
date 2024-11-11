@@ -1,4 +1,5 @@
 import random
+
 # Variable para almacenar el último número generado
 ultimo_numero = None
 

@@ -10,6 +10,17 @@ import mysql.connector
 from conexiones import *
 import json
 
+#consulto los soteos ejecutados para obtener el id del proximo sorteo
+def sorteosEjecutado():
+    mydb = conectar_base_datos()
+    mycursor = mydb.cursor()
+    mycursor.execute("SELECT COUNT(*) FROM sorteos where status = 1")
+    result = mycursor.fetchall()
+    mydb.close
+    print('result:', result)   
+    return result[0]
+
+
 def guardoLetraGanadora(letra,sorteoletra,nowDate):
     #Guarda el resultado de la letra ganadora
     nombreTabla1 = "resultadoletra"
@@ -355,7 +366,7 @@ def resetSorteosDia():
     mydb.close()
     return 'Sorteos Inicializados'
 
-#conulto el nuevo sorteo para enviar a la taquilla
+#consulto el nuevo sorteo para enviar a la taquilla
 def BuscarSorteo():
     mydb = conectar_base_datos()
     mycursor = mydb.cursor()
