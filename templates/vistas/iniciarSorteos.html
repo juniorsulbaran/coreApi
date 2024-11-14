@@ -81,7 +81,7 @@
         </div>
     </nav>
     <br>
-    <div class="container">
+    <div id="container" class="container"> 
         <div class="row row-cols-1 row-cols-md-2 row-cols-lg-3 g-4">
             <div class="col">
                 <div class="card"> 
@@ -133,6 +133,14 @@
                     <button type="button" onclick="enviarMensaje()" class="btn btn-primary">Enviar</button>
                 </div>
             </div>
+            <div class="col">
+              <div class="card">
+                  <div class="card-body">
+                      <h5 class="card-title">Ventas</h5>
+                  </div>
+                  <button type="button" onclick="buscarVentas()" class="btn btn-primary">Buscar</button>
+              </div>
+          </div>
         </div>
     </div>
     <div id="pagoMovil" class="modal">
@@ -293,6 +301,65 @@
         return false; 
       
       }
+
+    //buscar ventas del dia LottoABC
+    function buscarVentas(){
+      socket.emit('Compra', 'Compra');
+      url= '/ventaBoletoLetra'
+      $.ajax({
+        type: "POST",
+        url: url,
+        beforeSend:function(){
+          let timerInterval
+          Swal.fire({
+            title: '',
+            html: 'Procesando.',
+            timer: 5000,
+            timerProgressBar: true,
+            didOpen: () => {
+              Swal.showLoading()
+              timerInterval = setInterval(() => {
+                const seconds = Math.ceil(Swal.getTimerLeft() / 1000) // Convertir milisegundos a segundos y redondear hacia arriba
+              }, 1000) // Actualizar cada segundo en lugar de cada 100 milisegundos
+            },
+            willClose: () => {
+              clearInterval(timerInterval)
+            }  
+          })
+        },
+        success: function(response) {
+          console.log()
+          $('#container').html(response)
+        },
+        error: function(error) {
+          console.log(error);
+        }
+    
+      });
+      return false; 
+    
+    }
+    //recibe lista de boletos bendidos
+    socket.on('compraLottoABC',(msg) =>{
+      const tablaDatos = document.getElementById('tabla-datos');
+      // Limpiar el contenido de la fila
+      tablaDatos.innerHTML = '';
+      msg.forEach(dato => {
+          const fila = document.createElement('div');
+          fila.className = 'row'; // Clase para la fila
+
+          // Crear columnas para cada dato
+          for (let key in dato) {
+              const columna = document.createElement('div');
+              columna.className = 'col'; // Clase para la columna
+              columna.textContent = dato[key]; // Asignar el dato a la columna
+              fila.appendChild(columna); // Agregar la columna a la fila
+          }
+
+          tablaDatos.appendChild(fila); // Agregar la fila a la tabla
+      });
+    });
+
     // Obtener elementos del DOM
     var modaldatos = document.getElementById('pagoMovil');
     var btnAbrir = document.getElementById('datosPago');

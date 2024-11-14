@@ -20,6 +20,7 @@ import hashlib
 contadorSorteo = 0
 sorteoletra = ''
 hora_12h=''
+montoDisponible=''
 # Definir la zona horaria de Venezuela
 tz_venezuela = pytz.timezone('America/Caracas')
 # Obtener la hora actual en Venezuela
@@ -75,6 +76,7 @@ def sorteoLotto(sorteoletra,nowDate):
     emit('lotto', letra, broadcast=True)
     emit('resultadoLetraFecha', listarResultadoLetra, broadcast=True)
     print(' Lista resultado Letra: ', listarResultadoLetra) 
+
     
 #iniciamos el sorteo
 def recibir_mensaje(msg,pote,nowDate):
@@ -456,12 +458,32 @@ def recibir_mensaje(msg,pote,nowDate):
             print(numeroUnicoEliminado)
             print('nuevo dia: ',nowDate)
             break 
-              
+
+#monitoreo de venta boletos lottoABC
+@socketio.on('Compra')
+def ventaBoletoLetra(compraLottoABC):
+    while True:
+        listaVenta = buscarVentaDia(nowDate)
+        ventadiaria = []
+        for items in listaVenta:
+            diccVenta = {
+                'serial': items[0],
+                'opcion': items[4],
+                'monto': items[3],
+                'refPago':items[10]
+            }
+            ventadiaria.append(diccVenta)
+        emit('compraLottoABC', ventadiaria, broadcast=True)
+    
+#solicito la vista para ver las ventas del dia 
+@app.route('/ventaBoletoLetra', methods=['POST'])
+def ventaBoletoLetra():
+    return render_template('vistas/reporteVentaDiaria.html')
+
 #Hora del servidor
 @socketio.on('hora')
 def hora(hora):
     print(hora)
-    # Inicia la alarma
     while True:
         time.sleep(1)
         listarResultadoLetra = resultadoLetra(nowDate)
@@ -916,6 +938,7 @@ def compraBoletoLetra():
 @app.route("/comprarLetra", methods=['POST'])
 def comprarLetra():
     try:
+        global montoDisponible
         datosTicketLetra = request.form
         print('datos enviados: ',datosTicketLetra)
         resultadoReferencia = ""
@@ -933,7 +956,7 @@ def comprarLetra():
                 opcionJugada = datosTicketLetra['opcionId']
                 idSorteo = datosTicketLetra['sorteo']
                 #sumar la venta de la opcion para la hora del sorteo
-                montoOpcionVendida = sumaJugadasOpcion(opcionJugada,idSorteo)
+                montoOpcionVendida = sumaJugadasOpcion(opcionJugada,idSorteo,nowDate)
                 print('total Jugado:', montoOpcionVendida[0])
                 if  montoOpcionVendida[0] == None:
                     datos ={
@@ -948,6 +971,7 @@ def comprarLetra():
                     return datos
                         
                 if montoOpcionMayor > limiteOpciones:
+                    
                     montoDisponible = limiteOpciones - montoOpcionVendida[0] 
                     print(montoDisponible)
                     datos ={
@@ -967,13 +991,29 @@ def comprarLetra():
                 idSorteo = datosTicketLetra['sorteo']
                 montoOpcionVendida = sumaJugadasOpcion(opcionJugada,idSorteo)
                 print('monto 60: ',montoOpcionVendida[0])
+
+                if montoOpcionVendida[0] == None and int(limiteOpciones) == int(datosTicketLetra['monto']):
+                    datos ={
+                        'disponible':'procesar'
+                    }
+                    return datos
+
+                if int(montoOpcionVendida[0]) < int(limiteOpciones):
+                    montoDisponible = montoOpcionVendida[0] + int(datosTicketLetra['monto'])
+                    if montoDisponible > limiteOpciones:
+                        datos ={
+                            'disponible':'procesar',
+                            'monto':montoDisponible
+                        }
+                        return datos 
                  
                 if montoOpcionVendida[0] == None and int(datosTicketLetra['monto']) == limiteOpciones:
                     datos ={
                         'disponible':'procesar',
                         'monto':montoDisponible
                     }
-                    return datos    
+                    return datos 
+                   
                 else: 
                     if montoOpcionVendida[0] ==60 and int(datosTicketLetra['monto']) == limiteOpciones:
                         datos ={
@@ -1147,7 +1187,7 @@ def fecha():
 if __name__=="__main__": 
     #app.run(debug=True)
     #socketio.run(app)
-    socketio.run(app,'192.168.1.127',5000)
+    socketio.run(app,'192.168.1.7',5000)
     fechaHora = fecha()
     #socketio.run(app,'10.0.0.3',80)
     #app.run('10.0.0.2', 80, debug=True)

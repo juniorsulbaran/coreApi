@@ -1,0 +1,38 @@
+<style>
+    .card-img-top{
+        width:220px;
+        height:120px;
+    }
+    .modal-backdrop {
+        display: none; /* Esto oculta el fondo oscuro */
+    }
+</style>
+<div id="container">
+    <!-- ticket jugada -->
+    <div id="miModal" >
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <div class="row justify-content-center align-items-center w-100">
+                        <div class="col-auto">
+                            <h3 class="modal-title" id="miModalLabel">Ventas Diaria</h3>
+                        </div>
+                    </div> 
+                </div>
+                <div class="container mt-5">
+                    <div class="row bg-light text-center fw-bold">
+                        <div class="col">Serial</div>
+                        <div class="col">Jugada</div>
+                        <div class="col">Monto</div>
+                        <div class="col">Referencia</div>
+                    </div>
+                    <div id="tabla-datos"></div> <!-- Contenedor para las filas de datos -->
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" onclick="listaLetra()">Cerrar</button>
+                    <button type="button" class="btn btn-primary" id="confirmarCompra" disabled>Imprimir</button>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

@@ -293,12 +293,12 @@ socket.on('time',(msg) =>{
   document.getElementById('hora').innerText = msg;
 });
 
+
 socket.on('limpiarSala',(msg) =>{
   console.log(msg)
   salaJuego();
 });
 
- 
 socket.on('culta',(msg) =>{
   document.getElementById('horaoculta').innerText = msg;
 });

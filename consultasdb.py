@@ -20,6 +20,15 @@ def sorteosEjecutado():
     print('result:', result)   
     return result[0]
 
+# buscamos la venta del dia en la tabla ticketvendido
+def buscarVentaDia(nowDate):
+    mydb = conectar_base_datos()
+    mycursor = mydb.cursor()
+    mycursor.execute("SELECT * FROM ticketvendido where fecha = '%s'" % nowDate)
+    result = mycursor.fetchall()
+    mydb.close
+    #print('result:', result)   
+    return result
 
 def guardoLetraGanadora(letra,sorteoletra,nowDate):
     #Guarda el resultado de la letra ganadora
@@ -171,15 +180,15 @@ def buscarReferenciaLetra(referencia):
     print('referencia ticket: ',result)
     return result
 
-def sumaJugadasOpcion(opcionJugada, idSorteo):
+def sumaJugadasOpcion(opcionJugada, idSorteo,nowDate):
     # Asegúrate de convertir los parámetros a enteros dentro de la función
     opcionJugada = int(opcionJugada)
     idSorteo = int(idSorteo)
     mydb = conectar_base_datos()
     mycursor = mydb.cursor()
     # Corregir la consulta SQL
-    query = "SELECT SUM(monto)  FROM ticketvendido WHERE idopcion = %s AND idsorteo = %s"
-    mycursor.execute(query, (opcionJugada, idSorteo))
+    query = "SELECT SUM(monto)  FROM ticketvendido WHERE idopcion = %s AND idsorteo = %s AND fecha = %s"
+    mycursor.execute(query, (opcionJugada, idSorteo,nowDate))
     result = mycursor.fetchall()  # Obtener un solo resultado
     mydb.close()  # Asegúrate de llamar a close() como un método
     print('Suma jugadas:', result)
