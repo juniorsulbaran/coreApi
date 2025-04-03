@@ -1,0 +1,44 @@
+<div id="container" class="container">  
+    <div class="row">
+        <div class="col-md-4">
+            <div class="card">
+                <img src="{{ url_for('static', filename='image/taquilla.png') }}" class="card-img-top" alt="...">
+                <div class="card-body">
+                    <h5 class="card-title">Taquilla LottoABC</h5>
+                    <p class="card-text">Elige tu Letra Ganadora </p>
+                   <a href="#" onclick="listaLetra()" class="btn btn-primary" disabled >Entrar</a>
+                </div>
+            </div>
+        </div>
+        <br>
+        <br>
+        <br>
+        <div class="col-md-4">
+            <div class="card">
+                <img src="{{ url_for('static', filename='image/sorteo.png') }}" class="card-img-top" alt="...">
+                <div class="card-body">
+                    <h5 class="card-title">Sorteo LottoABC</h5>
+                    <p class="card-text">sorteo online </p>
+                    <!--<h5 class="card-text"><a href="#" onclick="salaJuego()">Bingo</a></h5>-->
+                    <a href="#" onclick="letraCantada()" class="btn btn-primary">Entrar</a>
+                <!--<a href="#" onclick="salaJuego()" class="btn btn-primary">Entrar</a>-->
+                </div>
+            </div>
+        </div>
+        <br>
+        <br>
+        <br>
+        <div class="col-md-4">
+            <div class="card">
+                <img src="{{ url_for('static', filename='image/carton.png') }}" class="card-img-top" alt="...">
+                <div class="card-body">
+                    <h5 class="card-title">Cartones</h5>
+                    <p class="card-text">Elige Carton Ganador </p>
+                    <p class="card-text">Próximamente</p>
+                   <!--<a href="#" onclick="listarCartones()" class="btn btn-primary" disabled >Entrar</a>--> 
+                </div>
+            </div>
+        </div>
+        <br>
+    </div>
+</div>

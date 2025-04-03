@@ -12,10 +12,12 @@ import os
 from conexiones import conectar_base_datos 
 from bolRandom import cantarBola
 from letraRandom import cantarLetra
+from verificaEmail import enviarCorreoVerificacion 
 import threading
 import pytz
 from datetime import datetime, timedelta
-import hashlib
+from werkzeug.security import generate_password_hash, check_password_hash
+
 #variables sorteo letra
 contadorSorteo = 0
 sorteoletra = ''
@@ -480,6 +482,83 @@ def ventaBoletoLetra(compraLottoABC):
 def ventaBoletoLetra():
     return render_template('vistas/reporteVentaDiaria.html')
 
+@app.route('/formRegister', methods=['POST'])
+def formRegister():
+    return render_template('login/register.html')
+
+@app.route('/formLogin', methods=['POST'])
+def formLogin():
+    return render_template('login/login.html')
+
+@app.route('/registro', methods=['POST'])
+def registro():
+    if request.method == 'POST':
+        try:
+            # Validar que el formulario no esté vacío
+            print('prueb',request.form)
+            if not request.form.to_dict():
+                return jsonify({
+                    'success': False,
+                    'message': 'Por favor complete todos los campos'
+                }), 400  # Bad Request
+
+            # Obtener datos del formulario
+            nombre = request.form.get('nombre', '').strip()
+            apellido = request.form.get('apellido', '').strip()
+            username = request.form.get('username', '').strip()
+            password = request.form.get('password', '').strip()
+            email = request.form.get('email', '').strip()
+            phone = request.form.get('phone', '').strip()
+            
+            # Validar campos obligatorios
+            if not all([nombre, apellido, username, password, email]):
+                return jsonify({
+                    'success': False,
+                    'message': 'Todos los campos son obligatorios excepto teléfono'
+                }), 400
+            
+            # Validar contraseña mínima
+            if len(password) < 8:
+                return jsonify({
+                    'success': False,
+                    'message': 'La contraseña debe tener al menos 8 caracteres'
+                }), 400
+            
+            # Verificar si el usuario ya existe
+            cursor = db.cursor()
+            cursor.execute('SELECT username FROM usuarios WHERE username = %s', (username,))
+            if cursor.fetchone():
+                return jsonify({
+                    'success': False,
+                    'message': 'El nombre de usuario ya existe'
+                }), 409  # Conflict
+            
+            # Crear hash de contraseña
+            hashed_password = generate_password_hash(password)
+            
+            # Insertar nuevo usuario
+            cursor.execute(
+                'INSERT INTO usuarios (nombre, apellido, username, password, email, phone) '
+                'VALUES (%s, %s, %s, %s, %s, %s)',
+                (nombre, apellido, username, hashed_password, email, phone)
+            )
+            db.commit()
+            nombeApellido = nombre + ' ' + apellido
+            validarCorreo = enviarCorreoVerificacion(email,nombeApellido)
+            print('correo enviado',validarCorreo)
+            return jsonify({
+                'success': True,
+                'message': 'Usuario registrado exitosamente',
+            }), 201  # create successfully
+            
+        except Exception as e:
+            db.rollback()
+            print(f"Error en registro: {str(e)}")
+            return jsonify({
+                'success': False,
+                'message': 'Ocurrió un error durante el registro'
+            }), 500  # Internal Server Error
+        
 #Hora del servidor
 @socketio.on('hora')
 def hora(hora):
@@ -931,7 +1010,10 @@ def compraBoletoLetra():
         resultado = ''.join(map(str, numeros))
         formatoSerial = resultado
         if serialTicket !='ok':
-            return render_template('vistas/ticket.html',datosTicketLetra=datosTicketLetra,hora_12h=hora_12h,nowDate=nowDate,formatoSerial=formatoSerial,sorteoOpcion=sorteoOpcion )
+            return render_template('vistas/ticket.html',datosTicketLetra=datosTicketLetra,
+                                   hora_12h=hora_12h,nowDate=nowDate,
+                                   formatoSerial=formatoSerial,
+                                   sorteoOpcion=sorteoOpcion )
     else:           
         return 'referencia duplicada'
 #comprar boleto letra
@@ -1187,7 +1269,7 @@ def fecha():
 if __name__=="__main__": 
     #app.run(debug=True)
     #socketio.run(app)
-    socketio.run(app,'192.168.1.7',5000)
+    socketio.run(app,'192.168.101.10',5000)
     fechaHora = fecha()
     #socketio.run(app,'10.0.0.3',80)
     #app.run('10.0.0.2', 80, debug=True)
