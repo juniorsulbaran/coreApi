@@ -1,143 +1,376 @@
 <!DOCTYPE html>
 <html lang="es">
-<head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Good-Juego</title>
-  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.0/dist/css/bootstrap.min.css" rel="stylesheet">
-</head>
-<style>
-    .texto-pequeño {
-        font-size: 12px; /* Ajusta el tamaño según tus necesidades */
-        display: inline; /* Muestra los elementos en línea */
-    }
-    .custom-width {
-        width: 20%;
-    }
-    footer {
-        background-color: #f8f9fa;
-        padding: 20px 0;
-        margin-top: 30px;
-        border-top: 1px solid #dee2e6;
-    }
-    .bg-light {
-        background-color:rgb(240, 244, 250) !important;
-    }
-    .error {
-        color: red;
-        font-size: 10px;
-        display: block; 
-        margin-top: 5px;
-        margin-left: 10%;
-    }
-    .success {
-        color: green;
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Good Juego</title>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600&display=swap" rel="stylesheet" />
+    <style>
+      body {
+        margin: 0;
+        font-family: Arial, sans-serif;
+        background-color: #1e0f3b;
+        color: white;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        min-height: 100vh;
+        padding: 20px;
+        box-sizing: border-box;
+      }
+      
+      .container {
+        background: #250a48;
+        width: 100%;
+        max-width: 340px;
+        padding: 20px;
+        border-radius: 20px;
+        box-shadow: 0 8px 16px rgba(0, 0, 0, 0.3);
+        text-align: center;
+        margin: 20px auto;
+      }
+      
+      .date-time {
+        background: #4a2b81;
+        padding: 8px;
+        border-radius: 10px;
+        margin-bottom: 15px;
+        font-size: 14px;
+      }
+      
+      .main-image {
+        width: 100%;
+        border-radius: 10px;
+        margin-bottom: 20px;
+      }
+      
+      .buttons {
+        display: flex;
+        justify-content: space-between;
+        gap: 10px;
+      }
+      
+      .btn {
+        flex: 1;
+        padding: 10px;
+        color: white;
+        border-radius: 10px;
+        text-decoration: none;
+        font-weight: 600;
+      }
+      
+      .register {
+        background-color: #e63946;
+      }
+      
+      .login {
+        background-color: #3b82f6;
+      }
+      
+      .contact {
+        margin-top: 20px;
+        font-size: 14px;
+        line-height: 1.6;
+      }
+      
+      .date-time {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        gap: 0.5rem;
+        margin-left: auto;
+        margin-right: auto;
+        width: fit-content;
+      }
+      
+      .texto-pequeño {
+        margin: 0;
+      }
+      
+      .header {
+        background: linear-gradient(45deg, #3f1d6c, #6d4ead);
+        padding: 20px;
+        display: flex;
+        justify-content: flex-end;
+        align-items: center;
+        width: 90%;
+        max-width: 340px;
+        border-radius: 15px;
+        margin-bottom: 10px;
+        margin-left: auto;
+        margin-right: 0;
+        justify-content: flex-end;
+      }
+      
+      .header img {
+        max-width: 140px;
+      }
+      .menu-toggle {
+        cursor: pointer;
+        display: flex;
+        flex-direction: column;
+        gap: 5px;
+      }
+      .menu-toggle div {
+        width: 30px;
+        height: 4px;
+        background-color: white;
+      }
+      .nav {
+        display: none;
+        flex-direction: column;
+        background-color: #6d4ead;
+        padding: 10px;
+        position: absolute;
+        top: 80px;
+        right: 20px;
+        border-radius: 15px;
+        box-shadow: 0 4px 8px rgba(0, 0, 0, 0.3);
+        z-index: 1000;
+        width: 200px;
+      }
+      .nav a {
+        color: white;
+        padding: 12px;
+        text-decoration: none;
+        text-align: right;
+        border-bottom: 1px solid #4f2d7f;
+      }
+      .nav a:last-child {
+        border-bottom: none;
+      }
+      .nav {
+        opacity: 0;
+        transform: translateY(20px);
+        transition: all 0.3s ease;
+      }
+      .nav.active {
+        display: flex;
+        opacity: 1;
+        transform: translateY(0);
+        display: flex;
+      }
+      
+      .form-group {
+        margin-bottom: 15px;
+        text-align: left;
+      }
+      
+      .form-group label {
+        display: block;
+        margin-bottom: 5px;
+        font-size: 14px;
+        color: #d1c4e9;
+      }
+      
+      .form-control {
+        width: 100%;
+        padding: 10px;
+        border: 2px solid #4a2b81;
+        border-radius: 8px;
+        background-color: #2d1155;
+        color: white;
+        font-size: 14px;
+        transition: all 0.3s ease;
+      }
+      
+      .form-control:focus {
+        outline: none;
+        border-color: #6d4ead;
+        box-shadow: 0 0 0 2px rgba(109, 78, 173, 0.3);
+      }
+      
+      .form-control::placeholder {
+        color: #9575cd;
+        opacity: 0.7;
+      }
+      
+      .password-error {
+        color: #ef9a9a;
         font-size: 12px;
-        display: block; 
         margin-top: 5px;
-        margin-left: 10%;
-    }
-</style>
-<body>
-    <nav class="navbar navbar-expand-lg navbar-light bg-light text-center">
-        <div class="container-fluid">
-            <div class="row">
-                <div class="custom-width d-flex align-items-center"> <!-- 20% del ancho --> 
-                    <img src="{{ url_for('static', filename='image/logohead.jpg') }}" class="img-fluid me-2" alt="..." style="max-width: 30px;" /> <!-- Ajusta el tamaño de la imagen según sea necesario -->
-                    <a href="/" class="text-decoration-none">
-                        <h3 class="text-secondary"></h3>
-                    </a>
-                </div>
-            </div>
-            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
-                <span class="navbar-toggler-icon"></span>
-            </button>
-            <div class="collapse navbar-collapse" id="navbarNav">
-                <ul class="navbar-nav">
-                    <li class="nav-item">
-                        <a class="nav-link active" aria-current="page" href="#">Inicio</a>
-                    </li>
-                    <li class="nav-item">
-                        <a class="nav-link" href="#" onclick="formUsuario(0)">Registro</a>
-                    </li>
-                    <li class="nav-item">
-                        <a class="nav-link" href="#">Inicio Sesion</a>
-                    </li>
-                    <li class="nav-item">
-                        <a class="nav-link" href="#">Comprar Carton</a>
-                    </li>
-                    <li class="nav-item">
-                        <a class="nav-link" href="#">Contacto</a>
-                    </li>
-                </ul>
-            </div>
-        </div>
+        height: 18px;
+      }
+      
+      #container {
+        max-width: 340px;
+        margin: 20px auto;
+      }
+      
+      .buttons {
+        margin-top: 20px;
+      }
+      
+      .container {
+        box-sizing: border-box;
+        width: 100%;
+        max-width: 340px;
+        padding: 20px;
+      }
+      
+      .form-group {
+        margin-bottom: 15px;
+        text-align: left;
+      }
+      
+      .form-group label {
+        display: block;
+        margin-bottom: 5px;
+        font-size: 14px;
+        color: #d1c4e9;
+      }
+      
+      .form-control {
+        width: calc(100% - 24px);
+        padding: 10px;
+        border: 2px solid #4a2b81;
+        border-radius: 8px;
+        background-color: #2d1155;
+        color: white;
+        font-size: 14px;
+        transition: all 0.3s ease;
+        box-sizing: border-box;
+      }
+      
+      .form-control:focus {
+        outline: none;
+        border-color: #6d4ead;
+        box-shadow: 0 0 0 2px rgba(109, 78, 173, 0.3);
+      }
+      
+      .form-control::placeholder {
+        color: #9575cd;
+        opacity: 0.7;
+      }
+      
+      .password-error {
+        color: #ef9a9a;
+        font-size: 12px;
+        margin-top: 5px;
+        height: 18px;
+      }
+      
+      .buttons {
+        margin-top: 20px;
+      }
+      
+      /* Nuevos estilos para las tarjetas */
+      .card {
+        background: #4a2b81;
+        border-radius: 15px;
+        padding: 15px;
+        margin-bottom: 20px;
+        box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+      }
+      
+      .card-img-top {
+        width: 100%;
+        border-radius: 10px;
+        margin-bottom: 15px;
+      }
+      
+      .card-title {
+        font-size: 18px;
+        margin-bottom: 10px;
+        color: white;
+      }
+      
+      .card-text {
+        font-size: 14px;
+        color: #d1c4e9;
+        margin-bottom: 15px;
+      }
+      
+      .btn-primary {
+        background-color: #3b82f6;
+        color: white;
+        border: none;
+        padding: 10px 15px;
+        border-radius: 8px;
+        text-decoration: none;
+        display: inline-block;
+        font-weight: bold;
+        cursor: pointer;
+        transition: background-color 0.3s;
+      }
+      
+      .btn-primary:hover {
+        background-color: #2563eb;
+      }
+      
+      .btn-primary:disabled {
+        background-color: #6b7280;
+        cursor: not-allowed;
+      }
+    </style>
+  </head>
+  <body>
+    <header class="header">
+      <div class="menu-toggle" onclick="toggleMenu()">
+        <div></div>
+        <div></div>
+        <div></div>
+      </div>
+    </header>
+
+    <nav class="nav" id="navMenu">
+      <a href="#">Inicio</a>
+      <a href="#">Juegos</a>
+      <a href="#">Ranking</a>
+      <a href="#">Perfil</a>
+      <a href="#">Cerrar sesión</a>
     </nav>
-    <input type="hidden" id="horaoculta" />
-    <div class="row align-items-center justify-content-center">
-        <div class="col-md-6 text-center">
-            <div class="row justify-content-center">
-                <div class="col-auto">
-                    <h6 class="texto-pequeño">Fecha:</h6>
-                   <p id="fecha" class="texto-pequeño" ></p>
-                   <h6 class="texto-pequeño">Hora:</h6>
-                    <p id="hora" class="texto-pequeño" ></p>
-                </div>
-            </div>
+    <div class="container">
+      <input type="hidden" id="horaoculta" />
+      <div class="date-time">
+        📅<p id="fecha" class="texto-pequeño"></p>🕒<p id="hora" class="texto-pequeño"></p>
+      </div>
+      <div id="container">
+        <img class="main-image" src="{{ url_for('static', filename='image/imagen_sin_fondo.png') }}" alt="Good Juego" />
+        <div class="buttons">
+          <button class="btn register" onclick="formUsuario(0)">Registrar</button>
+          <button class="btn login" onclick="formUsuario(1)">Entrar</button>
         </div>
+      </div>
+      <div class="contacto">
+        <div>✉️ info@goodjuego.com</div>
+        <div>📞 +123 456 7890</div>
+      </div>
     </div>
-
-    <div id="container" class="container d-flex justify-content-center">
-        <div class="col-md-4">
-            <div class="card">
-                <img src="{{ url_for('static', filename='image/logobody.jpg') }}" class="card-img-top" alt="...">
-                <div class="card-body">
-                    <button class="btn btn-danger me-2" onclick="formUsuario(0)">Registrar</button>
-                    <button class="btn btn-primary" onclick="formUsuario(1)">Entrar</button>
-                </div>
-            </div>
-        </div>
-    </div>
-
-    <!-- Footer -->
-    <footer class="text-center bg-light">
-        <div class="container">
-            <div class="row">
-                <div class="col-md-4">
-                    <h5>Contacto</h5>
-                    <p>Email: info@goodjuego.com</p>
-                    <p>Teléfono: +123 456 7890</p>
-                </div>
-                <div class="col-md-4">
-                    <h5>Redes Sociales</h5>
-                    <a href="#" class="me-2">Facebook</a>
-                    <a href="#" class="me-2">Twitter</a>
-                    <a href="#" class="me-2">Instagram</a>
-                </div>
-                <div class="col-md-4">
-                    <h5>Legal</h5>
-                    <p><a href="#">Términos y condiciones</a></p>
-                    <p><a href="#">Política de privacidad</a></p>
-                </div>
-            </div>
-            <hr>
-            <p class="mb-0">&copy; 2025 Good Juego. Todos los derechos reservados.</p>
-        </div>
-    </footer>
-
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.0/dist/js/bootstrap.bundle.min.js"></script>
     <script src="https://code.jquery.com/jquery-3.6.0.min.js" crossorigin="anonymous"></script>
     <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11.10.8/dist/sweetalert2.all.min.js"></script>
-    <link href="https://cdn.jsdelivr.net/npm/sweetalert2@11.10.8/dist/sweetalert2.min.css" rel="stylesheet">
+    <link href="https://cdn.jsdelivr.net/npm/sweetalert2@11.10.8/dist/sweetalert2.min.css" rel="stylesheet" />
     <script src="https://cdn.socket.io/4.5.4/socket.io.min.js"></script>
     <script src="{{ url_for('static', filename='js/bingo.js') }}"></script>
-    <script> // Añadir evento a los enlaces de navegación para colapsar el menú 
-        document.querySelectorAll('.navbar-nav .nav-link').forEach(link => { 
-            link.addEventListener('click', function() { 
-                var navbar = document.querySelector('.navbar-collapse'); 
-                if (navbar.classList.contains('show')) { 
-                    $('.navbar-collapse').collapse('hide'); 
-                } }); }); 
-    </script>
-</body>
+    <script>
+      // Añadir evento a los enlaces de navegación para colapsar el menú
+      document.querySelectorAll('.navbar-nav .nav-link').forEach(link => {
+          link.addEventListener('click', function() {
+              var navbar = document.querySelector('.navbar-collapse');
+              if (navbar.classList.contains('show')) {
+                  var bsCollapse = new bootstrap.Collapse(navbar, {
+                      toggle: false
+                  });
+                  bsCollapse.hide();
+              }
+          });
+      });
+      
+      {% if verification_result %}
+      document.addEventListener('DOMContentLoaded', function() {
+          Swal.fire({
+              title: '{{ "¡Éxito!" if verification_result.status else "¡Error!" }}',
+              text: '{{ verification_result.message }}',
+              icon: '{{ "success" if verification_result.status else "error" }}',
+              confirmButtonText: 'Aceptar'
+          });
+      });
+      {% endif %}
+      
+      function toggleMenu() {
+          document.getElementById('navMenu').classList.toggle('active');
+      }
+      </script>
+  </body>
 </html>

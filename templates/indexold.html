@@ -1,0 +1,213 @@
+<!DOCTYPE html>
+<html lang="es">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Good Juego</title>
+  </head>
+  <style>
+    .texto-pequeño {
+      font-size: 12px; /* Ajusta el tamaño según tus necesidades */
+      display: inline; /* Muestra los elementos en línea */
+    }
+    .custom-width {
+      width: 20%;
+    }
+    footer {
+      background-color: #f8f9fa;
+      padding: 20px 0;
+      margin-top: 30px;
+      border-top: 1px solid #dee2e6;
+    }
+    .bg-light {
+      background-color: rgb(240, 244, 250) !important;
+    }
+    .error {
+      color: red;
+      font-size: 10px;
+      display: block;
+      margin-top: 5px;
+      margin-left: 10%;
+    }
+    .success {
+      color: green;
+      font-size: 12px;
+      display: block;
+      margin-top: 5px;
+      margin-left: 10%;
+    }
+    
+    body {
+      font-family: 'Poppins', sans-serif;
+      margin: 0;
+      padding: 0;
+      background: linear-gradient(to bottom, #6e2cd6, #341256);
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      height: 100vh;
+      color: #fff;
+    }
+    .container {
+      background: #250a48;
+      width: 340px;
+      padding: 20px;
+      border-radius: 20px;
+      box-shadow: 0 8px 16px rgba(0, 0, 0, 0.3);
+      text-align: center;
+    }
+    .date-time {
+      background: #4a2b81;
+      padding: 8px;
+      border-radius: 10px;
+      margin-bottom: 15px;
+      font-size: 14px;
+    }
+    .main-image {
+      width: 100%;
+      border-radius: 10px;
+      margin-bottom: 20px;
+    }
+    .buttons {
+      display: flex;
+      justify-content: space-between;
+      gap: 10px;
+    }
+    .btn {
+      flex: 1;
+      padding: 10px;
+      color: white;
+      border-radius: 10px;
+      text-decoration: none;
+      font-weight: 600;
+    }
+    .register {
+      background-color: #e63946;
+    }
+    .login {
+      background-color: #3b82f6;
+    }
+    .contact {
+      margin-top: 20px;
+      font-size: 14px;
+      line-height: 1.6;
+    }
+  </style>
+  <body>
+    <nav class="navbar navbar-expand-lg navbar-light bg-light text-center">
+      <div class="container-fluid">
+        <div class="row">
+          <div class="custom-width d-flex align-items-center">
+            <!-- 20% del ancho -->
+            <img src="{{ url_for('static', filename='image/logohead.jpg') }}" class="img-fluid me-2" alt="..." style="max-width: 30px;" /> <!-- Ajusta el tamaño de la imagen según sea necesario -->
+            <a href="/" class="text-decoration-none"><h3 class="text-secondary"></h3></a>
+          </div>
+        </div>
+        <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation"><span class="navbar-toggler-icon"></span></button>
+        <div class="collapse navbar-collapse" id="navbarNav">
+          <ul class="navbar-nav">
+            <li class="nav-item">
+              <a class="nav-link active" aria-current="page" href="#">Inicio</a>
+            </li>
+            <li class="nav-item">
+              <a class="nav-link" href="#" onclick="formUsuario(0)">Registro</a>
+            </li>
+            <li class="nav-item">
+              <a class="nav-link" href="#">Inicio Sesion</a>
+            </li>
+            <li class="nav-item">
+              <a class="nav-link" href="#">Comprar Carton</a>
+            </li>
+            <li class="nav-item">
+              <a class="nav-link" href="#">Contacto</a>
+            </li>
+          </ul>
+        </div>
+      </div>
+    </nav>
+    <input type="hidden" id="horaoculta" />
+    <div class="row align-items-center justify-content-center">
+      <div class="col-md-6 text-center">
+        <div class="row justify-content-center">
+          <div class="col-auto">
+            <h6 class="texto-pequeño">Fecha:</h6>
+            <p id="fecha" class="texto-pequeño"></p>
+            <h6 class="texto-pequeño">Hora:</h6>
+            <p id="hora" class="texto-pequeño"></p>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div id="container" class="container d-flex justify-content-center">
+      <div class="col-md-4">
+        <div class="card">
+          <img src="{{ url_for('static', filename='image/logobody.jpg') }}" class="card-img-top" alt="..." />
+          <div class="card-body">
+            <button class="btn btn-danger me-2" onclick="formUsuario(0)">Registrar</button>
+            <button class="btn btn-primary" onclick="formUsuario(1)">Entrar</button>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Footer -->
+    <footer class="text-center bg-light">
+      <div class="container">
+        <div class="row">
+          <div class="col-md-4">
+            <h5>Contacto</h5>
+            <p>Email: info@goodjuego.com</p>
+            <p>Teléfono: +123 456 7890</p>
+          </div>
+          <div class="col-md-4">
+            <h5>Redes Sociales</h5>
+            <a href="#" class="me-2">Facebook</a>
+            <a href="#" class="me-2">Twitter</a>
+            <a href="#" class="me-2">Instagram</a>
+          </div>
+          <div class="col-md-4">
+            <h5>Legal</h5>
+            <p>
+              <a href="#">Términos y condiciones</a>
+            </p>
+            <p>
+              <a href="#">Política de privacidad</a>
+            </p>
+          </div>
+        </div>
+        <hr />
+        <p class="mb-0">&copy; 2025 Good Juego. Todos los derechos reservados.</p>
+      </div>
+    </footer>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.0/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js" crossorigin="anonymous"></script>
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11.10.8/dist/sweetalert2.all.min.js"></script>
+    <link href="https://cdn.jsdelivr.net/npm/sweetalert2@11.10.8/dist/sweetalert2.min.css" rel="stylesheet" />
+    <script src="https://cdn.socket.io/4.5.4/socket.io.min.js"></script>
+    <script src="{{ url_for('static', filename='js/bingo.js') }}"></script>
+    <script> // Añadir evento a los enlaces de navegación para colapsar el menú 
+        document.querySelectorAll('.navbar-nav .nav-link').forEach(link => { 
+            link.addEventListener('click', function() { 
+                var navbar = document.querySelector('.navbar-collapse'); 
+                if (navbar.classList.contains('show')) { 
+                    $('.navbar-collapse').collapse('hide'); 
+                } 
+            });
+         });
+         
+         {% if verification_result %}
+         document.addEventListener('DOMContentLoaded', function() {
+             Swal.fire({
+                 title: '{{ "¡Éxito!" if verification_result.status else "¡Error!" }}',
+                 text: '{{ verification_result.message }}',
+                 icon: '{{ "success" if verification_result.status else "error" }}',
+                 confirmButtonText: 'Aceptar'
+             });
+         });
+     {% endif %}
+
+    </script>
+  </body>
+</html>

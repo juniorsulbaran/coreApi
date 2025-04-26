@@ -479,3 +479,11 @@ def opcionesJuego():
         opciones.append(dicletra)
     print(opciones)
     return result
+
+def inicioSession(username):
+    mydb = conectar_base_datos()
+    mycursor = mydb.cursor(dictionary=True)
+    mycursor.execute('SELECT id, password FROM usuarios WHERE username = %s', (username,))
+    result = mycursor.fetchall()
+    mydb.close()
+    return result

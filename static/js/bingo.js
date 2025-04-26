@@ -72,36 +72,36 @@ function listaLetra() {
 
 
 function listarCartones() {
-  url = '/listarCartones'
+  var url = '/listarCartones';
+
+  Swal.fire({
+    title: 'Cargando',
+    html: 'Procesando cartones...',
+    timerProgressBar: true,
+    didOpen: () => {
+      Swal.showLoading();
+    },
+    allowOutsideClick: false
+  });
+
   $.ajax({
     type: "POST",
     url: url,
-    beforeSend: function () {
-      let timerInterval
-      Swal.fire({
-        title: '',
-        html: 'Procesando.',
-        timer: 5000,
-        timerProgressBar: true,
-        didOpen: () => {
-          Swal.showLoading()
-          timerInterval = setInterval(() => {
-            const seconds = Math.ceil(Swal.getTimerLeft() / 1000) // Convertir milisegundos a segundos y redondear hacia arriba
-          }, 1000) // Actualizar cada segundo en lugar de cada 100 milisegundos
-        },
-        willClose: () => {
-          clearInterval(timerInterval)
-        }
-      })
-    },
     success: function (response) {
-      console.log(response)
-      $('#container').html(response)
+      Swal.close();
+      $('#container').html(response);
     },
     error: function (error) {
-      console.log(error);
+      Swal.fire({
+        icon: 'error',
+        title: 'Error',
+        text: 'Ocurrió un error al cargar los cartones',
+        confirmButtonText: 'Entendido'
+      });
+      console.error('Error:', error);
     }
   });
+
   return false;
 }
 
@@ -293,12 +293,14 @@ function formUsuario(valor) {  // Añadí parámetro 'dato' que faltaba
   $.ajax({
     type: tipo,
     url: url,
+    contentType: 'application/x-www-form-urlencoded; charset=UTF-8',
+    dataType: 'html',
     beforeSend: function () {
       let timerInterval;
       Swal.fire({
         title: 'Procesando',
         html: 'Por favor espere... <b></b>',
-        timer: 5000,
+        timer: 3000,
         timerProgressBar: true,
         didOpen: () => {
           Swal.showLoading();
@@ -314,10 +316,7 @@ function formUsuario(valor) {  // Añadí parámetro 'dato' que faltaba
       });
     },
     success: function (response) {
-      console.log(response);
-      $('#container').html(response);
-      Swal.close();  // Cerrar SweetAlert al recibir respuesta
-      return false;  // Añadí return false aquí para evitar el envío del formulario
+      $('#container').html(response); zcxcz
     },
     error: function (error) {
       console.error(error);  // Usé console.error para errores
@@ -331,6 +330,8 @@ function formUsuario(valor) {  // Añadí parámetro 'dato' que faltaba
 
   return false;
 }
+
+
 function validatePassword() {
   const password = document.getElementById('password').value;
   const errorSpan = document.getElementById('passwordError');
@@ -376,6 +377,7 @@ function validatePassword() {
 // Capturar el clic en el botón (no en el formulario)
 function registrar() {
   var verificoPassword = validatePassword(); // Llamar a la función de validación de contraseña
+
   if (verificoPassword !== 'success') {
     return; // Detener el envío si la contraseña no es válida
   }
@@ -385,14 +387,13 @@ function registrar() {
 
   // Validar el formulario (opcional, pero recomendado)
   if (!form.checkValidity()) {
-    console.error('El formulario no es válido');
+    alert('El formulario no es válido');
     form.reportValidity(); // Muestra los mensajes de validación HTML5
     return; // Detiene el envío si hay errores
   }
 
   // Crear FormData con los datos del formulario
   const formData = new FormData(form);
-
   // Enviar por AJAX
   $.ajax({
     url: '/registro', // Asegúrate de que esta ruta sea correcta
@@ -423,6 +424,75 @@ function registrar() {
       });
     }
   });
+}
+
+//login para entras en la aplicacion 
+function login() {
+
+  const form = $('#login-form')[0];
+
+  // Validación básica del formulario
+  if (!form.checkValidity()) {
+    form.reportValidity();
+    return;
+  }
+
+  const formData = new FormData(form);
+
+  $.ajax({
+    url: '/login',
+    type: 'POST',
+    data: formData,
+    processData: false,
+    contentType: false,
+    dataType: 'json', // Asegurar que jQuery interprete la respuesta como JSON
+    success: function (response) {
+
+      if (response.success) {
+
+        Swal.fire({
+          icon: 'success',
+          title: '¡Éxito!',
+          text: response.message,
+          confirmButtonText: 'OK'
+        }).then(() => {
+          $('#container').html(response.html);
+        });
+      } else {
+        Swal.fire({
+          icon: 'error',
+          title: 'Error',
+          text: response.message,
+          confirmButtonText: 'Entendido'
+        });
+      }
+    },
+    error: function (xhr) {
+      let errorMessage = 'Error desconocido';
+      try {
+        // Intentar parsear el error aunque venga con código de error HTTP
+        const response = xhr.responseJSON || JSON.parse(xhr.message);
+        errorMessage = response.message || 'Error de conexión';
+        Swal.fire({
+          icon: 'error',
+          title: 'Inicio de Session',//`Error ${xhr.status || ''}`.trim(),
+          text: errorMessage,
+          confirmButtonText: 'OK'
+        });
+
+      } catch (e) {
+        const response = xhr.responseJSON || JSON.parse(xhr.message);
+        errorMessage = response.message || 'Error de conexión';
+        Swal.fire({
+          icon: 'error',
+          title: 'Inicio de Session',//`Error ${xhr.status || ''}`.trim(),
+          text: errorMessage,
+          confirmButtonText: 'OK'
+        });
+      }
+    }
+  });
+
 }
 
 

@@ -1,5 +1,5 @@
 #importar librerias
-from flask import Flask, jsonify, request,render_template,redirect,url_for,flash
+from flask import Flask, jsonify, request,render_template,redirect,url_for,flash,session
 # Importando las clases SocketIO y emit del módulo flask_socketio
 from flask_socketio import SocketIO, emit
 from flask_session import Session
@@ -12,7 +12,7 @@ import os
 from conexiones import conectar_base_datos 
 from bolRandom import cantarBola
 from letraRandom import cantarLetra
-from verificaEmail import enviarCorreoVerificacion 
+from verificaEmail import enviarCorreoVerificacion, obtener_verificacion_por_email
 import threading
 import pytz
 from datetime import datetime, timedelta
@@ -50,10 +50,53 @@ socketio = SocketIO(app)
 
 db = conectar_base_datos()
 
+# Configurar la duración de la sesión (5 minutos)
+app.config['PERMANENT_SESSION_LIFETIME'] = timedelta(minutes=5)
+
+@app.before_request
+def before_request():
+    # Reiniciar el temporizador de la sesión en cada solicitud
+    session.permanent = True  # La sesión expirará después de 5 minutos de inactividad
+    # Opcional: También puedes modificar manualmente 'session.modified = True' para reiniciar el tiempo
+
 # Escuchando si el servidor esta conectado del lado del servidor
 @socketio.on('connect')
 def handle_connect():
     emit("¡Bienvenido!")
+
+#Hora del servidor
+@socketio.on('hora')
+def hora(hora):
+    print(hora)
+    while True:
+        time.sleep(1)
+        listarResultadoLetra = resultadoLetra(nowDate)
+        emit('resultadoLetraFecha', listarResultadoLetra, broadcast=True)
+        sorteo = sorteopendiente()
+        sorteoPendiente = sorteo[0][0]
+        vendidos = 1
+        listCartonesVendidos = buscarTotalCartonesVendidos1(vendidos,sorteoPendiente,nowDate)
+        totalVendidos = listCartonesVendidos[0][0]
+        emit('boletoventa', totalVendidos, broadcast=True)
+        hora_actual_venezuela = datetime.now(tz_venezuela)
+        hora_actual = hora_actual_venezuela.strftime('%H:%M:%S') 
+        # Supongamos que tienes una hora en formato 24H
+        hora_24h = hora_actual
+        # Convertir la cadena a un objeto datetime
+        hora_objeto = datetime.strptime(hora_24h, "%H:%M:%S")
+        # Formatear la hora en formato 12H
+        hora_12h = hora_objeto.strftime("%I:%M:%S %p")       
+        emit('time', hora_12h, broadcast=True)
+        
+        
+#fecha del servido
+@socketio.on('fecha')
+def fecha(fecha):
+    print(fecha)
+    hora_actual_venezuela = datetime.now(tz_venezuela)
+    hora_actual = hora_actual_venezuela.strftime('%d/%m/%Y')     
+    emit('date', hora_actual, broadcast=True)
+
 
 # Escuchando si el cliente se desconecta del lado del servidor
 @socketio.on('disconnect')
@@ -492,10 +535,10 @@ def formLogin():
 
 @app.route('/registro', methods=['POST'])
 def registro():
-    if request.method == 'POST':
+    if request.method =='POST':
         try:
             # Validar que el formulario no esté vacío
-            print('prueb',request.form)
+            
             if not request.form.to_dict():
                 return jsonify({
                     'success': False,
@@ -512,6 +555,7 @@ def registro():
             
             # Validar campos obligatorios
             if not all([nombre, apellido, username, password, email]):
+                print('todos son obligatorios')
                 return jsonify({
                     'success': False,
                     'message': 'Todos los campos son obligatorios excepto teléfono'
@@ -519,6 +563,7 @@ def registro():
             
             # Validar contraseña mínima
             if len(password) < 8:
+                print('todos son obligatorios 1')
                 return jsonify({
                     'success': False,
                     'message': 'La contraseña debe tener al menos 8 caracteres'
@@ -535,7 +580,7 @@ def registro():
             
             # Crear hash de contraseña
             hashed_password = generate_password_hash(password)
-            
+            print('todos son obligatorios 3')
             # Insertar nuevo usuario
             cursor.execute(
                 'INSERT INTO usuarios (nombre, apellido, username, password, email, phone) '
@@ -544,7 +589,7 @@ def registro():
             )
             db.commit()
             nombeApellido = nombre + ' ' + apellido
-            validarCorreo = enviarCorreoVerificacion(email,nombeApellido)
+            validarCorreo = enviarCorreoVerificacion(email,nombeApellido,hashed_password)
             print('correo enviado',validarCorreo)
             return jsonify({
                 'success': True,
@@ -559,38 +604,121 @@ def registro():
                 'message': 'Ocurrió un error durante el registro'
             }), 500  # Internal Server Error
         
-#Hora del servidor
-@socketio.on('hora')
-def hora(hora):
-    print(hora)
-    while True:
-        time.sleep(1)
-        listarResultadoLetra = resultadoLetra(nowDate)
-        emit('resultadoLetraFecha', listarResultadoLetra, broadcast=True)
-        sorteo = sorteopendiente()
-        sorteoPendiente = sorteo[0][0]
-        vendidos = 1
-        listCartonesVendidos = buscarTotalCartonesVendidos1(vendidos,sorteoPendiente,nowDate)
-        totalVendidos = listCartonesVendidos[0][0]
-        emit('boletoventa', totalVendidos, broadcast=True)
-        hora_actual_venezuela = datetime.now(tz_venezuela)
-        hora_actual = hora_actual_venezuela.strftime('%H:%M:%S') 
-        # Supongamos que tienes una hora en formato 24H
-        hora_24h = hora_actual
-        # Convertir la cadena a un objeto datetime
-        hora_objeto = datetime.strptime(hora_24h, "%H:%M:%S")
-        # Formatear la hora en formato 12H
-        hora_12h = hora_objeto.strftime("%I:%M:%S %p")       
-        emit('time', hora_12h, broadcast=True)
+
+@app.route('/login', methods=['POST'])
+def login():
+    if request.method == 'POST':
+        try:
+            username = request.form.get('username', '').strip()
+            password = request.form.get('password', '').strip()
+
+            if not all([username, password]):
+                return jsonify({
+                    'success': False,
+                    'message': 'Todos los campos son obligatorios'
+                }), 400
+            
+            passwordHashDb = inicioSession(username)
+            quest = check_password_hash(passwordHashDb[0]['password'], password)
+            user_id = passwordHashDb[0]['id']
+            
+            if not quest:
+                return jsonify({
+                    'success': False,
+                    'message': 'Usuario o contraseña incorrectos'
+                }), 401
+            
+            # Establecer sesión (se marcará como permanente por el before_request)
+            session['user_id'] = user_id
+
+            return jsonify(
+                success=True,
+                message='Inicio de sesión exitoso',
+                user_id=user_id,
+                html=render_template('vistas/board.html')  # Renderiza el template como string
+            ), 200  # OK
+            
+        except Exception as e:
+            return jsonify({
+                'success': False,
+                'message': f'Error en el servidor: {str(e)}'
+            }), 500
         
+@app.route('/verifica/', methods=['GET'])
+def verificar():
+    token = request.args.get('id')
+    
+    if not token:
+        return render_template('index.html', 
+                            verification_result={
+                                'status': False,
+                                'message': 'Token no proporcionado'
+                            })
+
+    try:
+        usuario = verificar_token_en_bd(token)
         
-#fecha del servido
-@socketio.on('fecha')
-def fecha(fecha):
-    print(fecha)
-    hora_actual_venezuela = datetime.now(tz_venezuela)
-    hora_actual = hora_actual_venezuela.strftime('%d/%m/%Y')     
-    emit('date', hora_actual, broadcast=True)
+        if usuario:
+            activar_usuario(usuario[0])
+            return render_template('index.html', 
+                                verification_result={
+                                    'status': True,
+                                    'message': '¡Cuenta activada correctamente!'
+                                })
+        else:
+            return render_template('index.html', 
+                                verification_result={
+                                    'status': False,
+                                    'message': 'Token inválido o expirado'
+                                })
+
+    except Exception as e:
+        print(f"Error en verificación: {str(e)}")
+        return render_template('index.html', 
+                            verification_result={
+                                'status': False,
+                                'message': 'Error interno al verificar'
+                            })
+
+
+def verificar_token_en_bd(token):
+    """Busca un usuario con el token/password"""
+    try:
+        cursor = db.cursor()
+        
+        # Consulta adaptada para MariaDB/MySQL
+        query = """
+            SELECT id, email 
+            FROM usuarios 
+            WHERE password = %s 
+            AND activo = 1
+        """
+        cursor.execute(query, (token,))
+        
+        return cursor.fetchone()  # Retorna una tupla (id, email) o None
+        
+    except Exception as e:
+        print(f"Error en consulta: {str(e)}")
+        return None
+    finally:
+        cursor.close()
+
+
+def activar_usuario(usuario_id):
+    """Marca la cuenta como activa"""
+    try:
+        cursor = db.cursor()
+        cursor.execute(
+            "UPDATE usuarios SET activo = 0 WHERE id = %s",
+            (usuario_id,)
+        )
+        db.commit()
+    except Exception as e:
+        print(f"Error al activar usuario: {str(e)}")
+        db.rollback()
+    finally:
+        cursor.close()
+
         
 #Hora hora del sorteo cuando viene del back
 @socketio.on('horaPendiente')
@@ -884,64 +1012,59 @@ def listaLetra():
  
 @app.route('/listarCartones', methods=['POST'])
 def listarCartones():
-    #consultar  tabla numero unico por si estoy entrando a la sala y hay un sorteo en proceso
-    unico=[]
+    #consultar tabla numero unico por si estoy entrando a la sala y hay un sorteo en proceso
     unico = numerosSorteo() 
-    print('numeroUnico',unico)
-    if unico !=[]:
+    print('numeroUnico', unico)
+    
+    if unico:
         #cuando existe un sorteo activo
-        print('hay sorteo activo: ',unico)
+        print('hay sorteo activo: ', unico)
         return render_template('vistas/sorteoIniciado.html')
     else:    
         print('Solicitud de Cartones')
         sorteoPendiente = sorteopendiente()
-        print('sorteo: ',sorteoPendiente)
+        print('sorteo: ', sorteoPendiente)
+        
+        if not sorteoPendiente:
+            return render_template('vistas/cartones.html', opcionesJson=[])
+            
         sorteo = sorteoPendiente[0]
         vendidos = 0
-        listCartones = buscarSerialCartones(vendidos,sorteo,nowDate)
+        listCartones = buscarSerialCartones(vendidos, sorteo, nowDate)
         opcionesJson = []
+        
         for numeroCarton in listCartones:    
             serialcarton = numeroCarton[0]
             horaSorteo = numeroCarton[1]
             FechaSorteo = numeroCarton[2]
             venta = numeroCarton[3]
-            opcionesCarton = buscarCartones(serialcarton)
-
-            if opcionesCarton[0][0] == serialcarton:
-                cadenaB  = opcionesCarton[0][1]
-                nueva_cadenab = ''.join(caracter for caracter in cadenaB if caracter.isalnum() or caracter.isspace())
-                b = nueva_cadenab.split(' ')
+            opcionesCarton = buscarCartones()
+            
+            if opcionesCarton and opcionesCarton[0][0] == serialcarton:
+                # Procesar cada línea del cartón
+                cadenas = []
+                for i in range(1, 6):  # Para B, I, N, G, O
+                    cadena = opcionesCarton[0][i]
+                    nueva_cadena = ''.join(caracter for caracter in cadena if caracter.isalnum() or caracter.isspace())
+                    cadenas.append(nueva_cadena.split())
                 
-                cadenaI  = opcionesCarton[0][2]
-                nueva_cadenai = ''.join(caracter for caracter in cadenaI if caracter.isalnum() or caracter.isspace())
-                i = nueva_cadenai.split(' ')
-                
-                cadenaN  = opcionesCarton[0][3]
-                nueva_cadenaN = ''.join(caracter for caracter in cadenaN if caracter.isalnum() or caracter.isspace())
-                n = nueva_cadenaN.split(' ')
-
-                cadenaG  = opcionesCarton[0][4]
-                nueva_cadenaG = ''.join(caracter for caracter in cadenaG if caracter.isalnum() or caracter.isspace())
-                g = nueva_cadenaG.split(' ')
-                
-                cadenaO  = opcionesCarton[0][5]
-                nueva_cadenaO = ''.join(caracter for caracter in cadenaO if caracter.isalnum() or caracter.isspace())
-                o = nueva_cadenaO.split(' ')           
-                
-                opcion={
-                    'serial':opcionesCarton[0][0],
+                opcion = {
+                    'serial': opcionesCarton[0][0],
                     'fecha': FechaSorteo,
                     'hora': horaSorteo,
-                    'venta':venta,
-                    'B':b,
-                    'I':i,
-                    'N':n,
-                    'G':g,
-                    'O':o
+                    'venta': venta,
+                    'B': cadenas[0],
+                    'I': cadenas[1],
+                    'N': cadenas[2],
+                    'G': cadenas[3],
+                    'O': cadenas[4]
                 }
+                print('cartones:',opcion)
                 opcionesJson.append(opcion)            
-        return render_template('vistas/cartones.html',opcionesJson=opcionesJson)
-
+        
+        return render_template('vistas/cartones.html', opcionesJson=opcionesJson)
+    
+    
 """GET Consultas"""
 @app.route("/users/<user_id>")
 def get_user(user_id):
@@ -1269,7 +1392,7 @@ def fecha():
 if __name__=="__main__": 
     #app.run(debug=True)
     #socketio.run(app)
-    socketio.run(app,'192.168.101.10',5000)
+    socketio.run(app,'192.168.101.11',5000)
     fechaHora = fecha()
     #socketio.run(app,'10.0.0.3',80)
     #app.run('10.0.0.2', 80, debug=True)
