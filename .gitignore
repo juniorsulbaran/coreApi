@@ -20867,4 +20867,5 @@ lotto/Scripts/python_d.exe
 lotto/Scripts/python.exe
 lotto/Scripts/pythonw_d.exe
 lotto/Scripts/pythonw.exe
-
+conexiones.py
+verificaEmail.py
