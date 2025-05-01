@@ -45,7 +45,7 @@ def enviarCorreoVerificacion(email, nombreApellido, hashed_password):
     email_to = email
 
     # URL de verificación
-    verification_url = f"http://192.168.101.11:5000/verifica/?id={hashed_password}"
+    verification_url = f"http://192.168.101.4:5000/verifica/?id={hashed_password}"
 
     # Crear el mensaje
     mensaje = MIMEMultipart()

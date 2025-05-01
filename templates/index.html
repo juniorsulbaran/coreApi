@@ -93,13 +93,11 @@
         display: flex;
         justify-content: flex-end;
         align-items: center;
-        width: 90%;
+        width: 100%;
         max-width: 340px;
         border-radius: 15px;
-        margin-bottom: 10px;
-        margin-left: auto;
-        margin-right: 0;
-        justify-content: flex-end;
+        margin: 10px auto;
+        box-sizing: border-box;
       }
       
       .header img {
@@ -123,11 +121,14 @@
         padding: 10px;
         position: absolute;
         top: 80px;
-        right: 20px;
+        left: 50%;
+        transform: translateX(-50%);
         border-radius: 15px;
         box-shadow: 0 4px 8px rgba(0, 0, 0, 0.3);
         z-index: 1000;
         width: 200px;
+        opacity: 0;
+        transition: all 0.3s ease;
       }
       .nav a {
         color: white;
@@ -139,16 +140,9 @@
       .nav a:last-child {
         border-bottom: none;
       }
-      .nav {
-        opacity: 0;
-        transform: translateY(20px);
-        transition: all 0.3s ease;
-      }
       .nav.active {
         display: flex;
         opacity: 1;
-        transform: translateY(0);
-        display: flex;
       }
       
       .form-group {
@@ -371,6 +365,6 @@
       function toggleMenu() {
           document.getElementById('navMenu').classList.toggle('active');
       }
-      </script>
+    </script>
   </body>
 </html>

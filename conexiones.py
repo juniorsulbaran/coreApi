@@ -11,9 +11,9 @@ import os
 
 #variables globales .env
 # Parámetros de conexión a la base de datos
-host = '10.0.0.63' #os.getenv('IP')     #'10.132.201.185'
+host = '192.168.101.4' #os.getenv('IP')     #'10.132.201.185'
 user ='root' #os.getenv('USER')     #'admin'
-password = ''#os.getenv('PASSWORD') #'admin'
+password ='bingo@'#os.getenv('PASSWORD') #'admin'
 database = 'bingodb' #os.getenv('DATABASE') #'ingesta_bd'
 
 # Conexión a MySql

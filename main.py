@@ -1013,6 +1013,7 @@ def listaLetra():
 @app.route('/listarCartones', methods=['POST'])
 def listarCartones():
     #consultar tabla numero unico por si estoy entrando a la sala y hay un sorteo en proceso
+    print('Solicitud de Cartones')
     unico = numerosSorteo() 
     print('numeroUnico', unico)
     
@@ -1392,7 +1393,7 @@ def fecha():
 if __name__=="__main__": 
     #app.run(debug=True)
     #socketio.run(app)
-    socketio.run(app,'192.168.101.11',5000)
+    socketio.run(app,'192.168.101.4',5000)
     fechaHora = fecha()
     #socketio.run(app,'10.0.0.3',80)
     #app.run('10.0.0.2', 80, debug=True)

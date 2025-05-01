@@ -25,7 +25,6 @@ function listarCartonesPremiados() {
     success: function (response) {
       console.log(response)
       $('#container').html(response)
-
     },
     error: function (error) {
       console.log(error);
