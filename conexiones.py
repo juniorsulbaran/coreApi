@@ -11,9 +11,9 @@ import os
 import time
 
 # Variables globales .env
-host = '192.168.101.4'  # os.getenv('IP')
+host = '98.227.73.32'  # os.getenv('IP')
 user = 'root'  # os.getenv('USER')
-password = 'bingo@'  # os.getenv('PASSWORD')
+password = ''  # os.getenv('PASSWORD')
 database = 'bingodb'  # os.getenv('DATABASE')
 
 def verificar_conexion(mydb):

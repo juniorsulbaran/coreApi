@@ -604,11 +604,11 @@ def registro():
                 'message': 'Ocurrió un error durante el registro'
             }), 500  # Internal Server Error
         
-
+#Funcion Inicio de session
 @app.route('/login', methods=['POST'])
 def login():
-    if request.method == 'POST':
-        try:
+    try:
+        if request.method == 'POST':
             username = request.form.get('username', '').strip()
             password = request.form.get('password', '').strip()
 
@@ -619,30 +619,35 @@ def login():
                 }), 400
             
             passwordHashDb = inicioSession(username)
-            quest = check_password_hash(passwordHashDb[0]['password'], password)
-            user_id = passwordHashDb[0]['id']
             
-            if not quest:
+            if not passwordHashDb:
+                return jsonify({
+                    'success': False,
+                    'message': 'Usuario no encontrado'
+                }), 401
+                
+            stored_password = passwordHashDb[0].get('password')
+            if not stored_password or not check_password_hash(stored_password, password):
                 return jsonify({
                     'success': False,
                     'message': 'Usuario o contraseña incorrectos'
                 }), 401
             
-            # Establecer sesión (se marcará como permanente por el before_request)
-            session['user_id'] = user_id
-
+            user_id = passwordHashDb[0]['id']
+            
             return jsonify(
                 success=True,
                 message='Inicio de sesión exitoso',
                 user_id=user_id,
-                html=render_template('vistas/board.html')  # Renderiza el template como string
-            ), 200  # OK
+                html=render_template('vistas/board.html')
+            ), 200
             
-        except Exception as e:
-            return jsonify({
-                'success': False,
-                'message': f'Error en el servidor: {str(e)}'
-            }), 500
+    except Exception as e:
+        app.logger.error(f"Error en login: {str(e)}")
+        return jsonify({
+            'success': False,
+            'message': 'Error interno del servidor'
+        }), 500
         
 @app.route('/verifica/', methods=['GET'])
 def verificar():
