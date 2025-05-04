@@ -634,12 +634,12 @@ def login():
                 }), 401
             
             user_id = passwordHashDb[0]['id']
-            
+            print(user_id)
             return jsonify(
                 success=True,
                 message='Inicio de sesión exitoso',
                 user_id=user_id,
-                html=render_template('vistas/board.html')
+                html=render_template('vistas/dasboard.html')
             ), 200
             
     except Exception as e:
@@ -649,6 +649,31 @@ def login():
             'message': 'Error interno del servidor'
         }), 500
         
+        
+#entramos en las salas  
+@app.route('/salasBingo', methods=['POST'])
+def salasBingo():
+    listaSalas = listarSalas()  # Datos crudos (con Decimal, datetime, timedelta)
+    
+    # Convertir todos los campos no serializables
+    listaSalas_serializable = convertir_a_json_serializable(listaSalas)
+    
+    return jsonify(
+        success=True,
+        message='',
+        listaSalas=listaSalas_serializable,
+        html=render_template('vistas/salasBingo.html', listaSalas=listaSalas_serializable)
+    ), 200
+ 
+#listamos la taquilla 
+@app.route('/taquillaBingo', methods=['POST'])
+def taquillaBingo():               
+    return jsonify(
+        success=True,
+        message='',
+        html=render_template('vistas/taquillaBingo.html')
+    ), 200
+       
 @app.route('/verifica/', methods=['GET'])
 def verificar():
     token = request.args.get('id')
@@ -666,24 +691,24 @@ def verificar():
         if usuario:
             activar_usuario(usuario[0])
             return render_template('index.html', 
-                                verification_result={
-                                    'status': True,
-                                    'message': '¡Cuenta activada correctamente!'
-                                })
+                verification_result={
+                    'status': True,
+                    'message': '¡Cuenta activada correctamente!'
+                })
         else:
             return render_template('index.html', 
-                                verification_result={
-                                    'status': False,
-                                    'message': 'Token inválido o expirado'
-                                })
+                verification_result={
+                    'status': False,
+                    'message': 'Token inválido o expirado'
+                })
 
     except Exception as e:
         print(f"Error en verificación: {str(e)}")
         return render_template('index.html', 
-                            verification_result={
-                                'status': False,
-                                'message': 'Error interno al verificar'
-                            })
+            verification_result={
+                'status': False,
+                'message': 'Error interno al verificar'
+            })
 
 
 def verificar_token_en_bd(token):
@@ -1398,7 +1423,7 @@ def fecha():
 if __name__=="__main__": 
     #app.run(debug=True)
     #socketio.run(app)
-    socketio.run(app,'192.168.101.4',5000)
+    socketio.run(app,'192.168.1.8',5000)
     fechaHora = fecha()
     #socketio.run(app,'10.0.0.3',80)
     #app.run('10.0.0.2', 80, debug=True)

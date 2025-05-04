@@ -1,0 +1,15 @@
+<div class="balance">Saldo: <strong>$0.00</strong></div>
+<div id="container">
+  <h2>Salas de Bingo</h2>
+  {% for sala in listaSalas %}
+    <div class="bingo-room">
+      <img src="https://img.icons8.com/color/96/bingo.png" alt="Bingo Icono 1" />
+      <div class="room-details">
+        <h3>${{ sala.precio }}</h3>
+        <p>Premio mayor: ${{ sala.premio_mayor }}</p>
+        <p>Cartones vendidos: {{ sala.cartones_vendidos }}</p>
+      </div>
+      <button>JUGAR</button>
+    </div>
+  {% endfor %}
+</div>

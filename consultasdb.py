@@ -9,6 +9,8 @@ from flask import Flask, jsonify, request,render_template,redirect,url_for,flash
 import mysql.connector
 from conexiones import *
 import json
+from datetime import date, datetime, timedelta
+from decimal import Decimal
 
 #consulto los soteos ejecutados para obtener el id del proximo sorteo
 def sorteosEjecutado():
@@ -487,3 +489,37 @@ def inicioSession(username):
     result = mycursor.fetchall()
     mydb.close()
     return result
+
+#listamos las salas del bingo
+def listarSalas():
+    mydb = conectar_base_datos()
+    mycursor = mydb.cursor(dictionary=True)
+    mycursor.execute('SELECT * FROM salas')
+    result = mycursor.fetchall()
+    mydb.close()
+    # Convertir Decimal a float antes de retornar
+    salas_convertidas = []
+    for sala in result:
+        sala_convertida = {}
+        for key, value in sala.items():
+            if isinstance(value, Decimal):
+                sala_convertida[key] = float(value)
+            else:
+                sala_convertida[key] = value
+        salas_convertidas.append(sala_convertida)
+    
+    return salas_convertidas  # Ahora es JSON-serializable
+
+def convertir_a_json_serializable(datos):
+    if isinstance(datos, (Decimal, float)):
+        return float(datos)
+    elif isinstance(datos, (date, datetime)):
+        return datos.isoformat()  # Convierte a string (ej: "2025-05-03T22:10:47")
+    elif isinstance(datos, timedelta):
+        return str(datos)  # Convierte a string (ej: "20:00:00")
+    elif isinstance(datos, dict):
+        return {key: convertir_a_json_serializable(value) for key, value in datos.items()}
+    elif isinstance(datos, (list, tuple)):
+        return [convertir_a_json_serializable(item) for item in datos]
+    else:
+        return datos  # int, str, bool, etc. no necesitan conversión

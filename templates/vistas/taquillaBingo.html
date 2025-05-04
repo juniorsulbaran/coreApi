@@ -1,0 +1,19 @@
+<div class="balance">Saldo: <strong>$0.00</strong></div>
+<div id="container">
+    <div class="card">
+        <img src="{{ url_for('static', filename='image/taquillaBingo.jpeg') }}" class="card-img-top" alt="Cartones" />
+        <div class="card-body">
+          <h5 class="card-title">Salas de Bingo</h5>
+          <p class="card-text">Entra y disfruta Apostando</p>
+        </div>
+        <button class="btn login" onclick="salasBingo()">Entrar</button>
+    </div>
+    <div class="card">
+        <img src="{{ url_for('static', filename='image/imagen_sin_fondo.png') }}" class="card-img-top" alt="Cartones" />
+        <div class="card-body">
+          <h5 class="card-title">Taquilla Bingo</h5>
+          <p class="card-text">Compra Tu Cartor Ganador</p>
+        </div>
+        <button class="btn login" onclick="taquillaBingo()">Entrar</button>
+    </div>
+</div>

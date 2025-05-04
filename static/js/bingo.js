@@ -69,6 +69,33 @@ function listaLetra() {
   return false;
 }
 
+function salasBingo() {
+  var url = '/salasBingo'; 
+  $.ajax({
+    type: "POST",
+    url: url,
+    success: function (response) {
+      $('#container').html(response.html);
+    },
+    error: function (error) {
+      console.error('Error:', error);
+    }
+  });
+}
+
+function taquillaBingo(){
+  var url = '/taquillaBingo';
+  $.ajax({
+    type: "POST",
+    url: url,
+    success: function (response) {
+      $('#container').html(response.html);
+    },
+    error: function (error) {
+      console.error('Error:', error);
+    }
+  });
+}
 
 function listarCartones() {
   var url = '/listarCartones';
@@ -295,24 +322,7 @@ function formUsuario(valor) {  // Añadí parámetro 'dato' que faltaba
     contentType: 'application/x-www-form-urlencoded; charset=UTF-8',
     dataType: 'html',
     beforeSend: function () {
-      let timerInterval;
-      Swal.fire({
-        title: 'Procesando',
-        html: 'Por favor espere... <b></b>',
-        timer: 3000,
-        timerProgressBar: true,
-        didOpen: () => {
-          Swal.showLoading();
-          const b = Swal.getHtmlContainer().querySelector('b');
-          timerInterval = setInterval(() => {
-            const seconds = Math.ceil(Swal.getTimerLeft() / 1000);
-            b.textContent = seconds;
-          }, 1000);
-        },
-        willClose: () => {
-          clearInterval(timerInterval);
-        }
-      });
+ 
     },
     success: function (response) {
       $('#container').html(response); zcxcz
@@ -449,14 +459,8 @@ function login() {
 
       if (response.success) {
 
-        Swal.fire({
-          icon: 'success',
-          title: '¡Éxito!',
-          text: response.message,
-          confirmButtonText: 'OK'
-        }).then(() => {
-          $('#container').html(response.html);
-        });
+        $('#container').html(response.html);
+        
       } else {
         Swal.fire({
           icon: 'error',
