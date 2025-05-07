@@ -664,6 +664,16 @@ def salasBingo():
         listaSalas=listaSalas_serializable,
         html=render_template('vistas/salasBingo.html', listaSalas=listaSalas_serializable)
     ), 200
+@app.route('/carton', methods=['POST'])
+def carton():
+   
+    return jsonify(
+        success=True,
+        message='',
+        #listaSalas=listaSalas_serializable,
+        html=render_template('vistas/carton.html')
+    ), 200
+
  
 #listamos la taquilla 
 @app.route('/taquillaBingo', methods=['POST'])
@@ -1423,7 +1433,7 @@ def fecha():
 if __name__=="__main__": 
     #app.run(debug=True)
     #socketio.run(app)
-    socketio.run(app,'192.168.1.8',5000)
+    socketio.run(app,'192.168.101.12',5000)
     fechaHora = fecha()
     #socketio.run(app,'10.0.0.3',80)
     #app.run('10.0.0.2', 80, debug=True)

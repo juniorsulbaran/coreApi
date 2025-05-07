@@ -1,0 +1,59 @@
+flowchart TD
+    %% ===== MÓDULO ESP32 =====
+    subgraph ESP32["ESP32 (Servidor)"]
+        A[API REST] --> B[Autenticación 2 Pasos]
+        B --> C[Login/Registro\nValidación JSON]
+        C --> D[Generación Token HMAC]
+        D --> E[Almacenamiento Cifrado\nclaveDescifrado.json]
+        E --> F[Validación Token]
+    end
+
+    %% ===== MÓDULO PYTHON =====
+    subgraph Python["Cliente Python"]
+        G[Solicitud API] --> H[Obtención Claves]
+        H --> I[Descifrado\n.po/.json/.xml/otros en RAM]
+        I --> J[AES-256]
+        J --> K[Borrado Seguro]
+    end
+
+    %% ===== SEGURIDAD =====
+    subgraph Seguridad["Seguridad Avanzada"]
+        L[Derivación HKDF]
+        M[Firmas HMAC]
+        N[Nonces/Timestamps]
+    end
+
+    %% ===== INTERACCIONES =====
+    Python -- HTTPS --> ESP32
+    ESP32 -->|Protegido por| Seguridad
+    Python -->|Usa| Seguridad
+
+    %% ===== EXPLICACIONES =====
+    noteA["• Endpoint para solicitudes HTTP\n• Usa puerto configurable"] -.-> A
+    noteB["• Verifica usuario/contraseña\n• Consulta archivo users.json"] -.-> B
+    noteD["• Token JWT firmado con HMAC-SHA256\n• Caducidad: 15 minutos"] -.-> D
+    noteI["• Opera en memoria (no escribe disco)\n• Soporta .po/.json/XML"] -.-> I
+    noteL["• Deriva claves AES-256\n• Usa salto criptográfico"] -.-> L
+ 
+    %% ===== FLUJO PRINCIPAL =====
+    paso1["1. Cliente envía credenciales"] --> B
+    paso2["2. Servidor genera token"] --> D
+    paso3["3. Cliente solicita claves\n(envía token en header)"] --> H
+    paso4["4. Servidor verifica token\n→ Devuelve clave cifrada"] --> F
+    paso5["5. Cliente descifra archivos\n→ Borra claves de RAM"] --> K
+
+    %% ===== ESTILOS =====
+    classDef esp32 fill:#2c3e50,stroke:#bdc3c7,color:white,stroke-width:2px;
+    classDef python fill:#34495e,stroke:#95a5a6,color:white,stroke-width:2px;
+    classDef security fill:#1a5276,stroke:#3498db,color:white,stroke-width:2px;
+    classDef notes fill:#1e8449,stroke:#27ae60,color:white,stroke-width:2px;
+    classDef steps fill:#7d6608,stroke:#f39c12,color:white,dashed;
+    
+    class ESP32 esp32;
+    class Python python;
+    class Seguridad security;
+    class noteA,noteB,noteD,noteI,noteL notes;
+    class paso1,paso2,paso3,paso4,paso5 steps;
+
+
+    

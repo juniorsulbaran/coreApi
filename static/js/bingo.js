@@ -83,6 +83,21 @@ function salasBingo() {
   });
 }
 
+function formCarton() {
+  var url = '/carton'; 
+  $.ajax({
+    type: "POST",
+    url: url,
+    success: function (response) {
+      $('#container').html(response.html);
+    },
+    error: function (error) {
+      console.error('Error:', error);
+    }
+  });
+}
+
+
 function taquillaBingo(){
   var url = '/taquillaBingo';
   $.ajax({
@@ -1072,3 +1087,4 @@ socket.on('message', (msg) => {
   }
 
 });
+

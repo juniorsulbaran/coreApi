@@ -1,0 +1,86 @@
+<div class="balance">
+    Saldo: <strong>$0.00</strong>
+  </div>
+  <div id="container">
+    <div class="content" style="display: flex; flex-direction: column; gap: 20px;">
+      <div class="game-board" style="background: #38196a; border-radius: 15px; padding: 15px; box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);">
+        <div class="timer" style="background: #4a2b81; padding: 8px; border-radius: 10px; margin-bottom: 15px; font-size: 14px;">
+          <span>Tiempo restante: 1:57</span>
+        </div>
+        <div class="bingo-ball" style="background: #6d4ead; width: 80px; height: 80px; margin: 0 auto 20px; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 24px; font-weight: bold; box-shadow: 0 4px 8px rgba(0, 0, 0, 0.3);">
+          <span>B1</span>
+        </div>
+        <div class="numbers" style="display: grid; grid-template-columns: repeat(5, 1fr); gap: 10px; margin-bottom: 20px; position: relative;">
+          <!-- Letras BINGO -->
+          <div class="letter" style="grid-column: 1; display: flex; justify-content: center; align-items: center; font-size: 24px; font-weight: bold; color: #ffcc00; text-shadow: 0 0 5px #ff6600;">B</div>
+          <div class="letter" style="grid-column: 2; display: flex; justify-content: center; align-items: center; font-size: 24px; font-weight: bold; color: #ff3366; text-shadow: 0 0 5px #ff0066;">I</div>
+          <div class="letter" style="grid-column: 3; display: flex; justify-content: center; align-items: center; font-size: 24px; font-weight: bold; color: #00ccff; text-shadow: 0 0 5px #0066ff;">N</div>
+          <div class="letter" style="grid-column: 4; display: flex; justify-content: center; align-items: center; font-size: 24px; font-weight: bold; color: #66ff33; text-shadow: 0 0 5px #00cc00;">G</div>
+          <div class="letter" style="grid-column: 5; display: flex; justify-content: center; align-items: center; font-size: 24px; font-weight: bold; color: #cc66ff; text-shadow: 0 0 5px #9900ff;">O</div>
+  
+          <!-- Fila 1 -->
+          <div class="number" style="background: #4a2b81; border-radius: 8px; padding: 10px; font-weight: bold; box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);">10</div>
+          <div class="number" style="background: #4a2b81; border-radius: 8px; padding: 10px; font-weight: bold; box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);">24</div>
+          <div class="number" style="background: #4a2b81; border-radius: 8px; padding: 10px; font-weight: bold; box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);">31</div>
+          <div class="number" style="background: #4a2b81; border-radius: 8px; padding: 10px; font-weight: bold; box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);">49</div>
+          <div class="number" style="background: #4a2b81; border-radius: 8px; padding: 10px; font-weight: bold; box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);">64</div>
+  
+          <!-- Fila 2 -->
+          <div class="number" style="background: #4a2b81; border-radius: 8px; padding: 10px; font-weight: bold; box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);">1</div>
+          <div class="number" style="background: #4a2b81; border-radius: 8px; padding: 10px; font-weight: bold; box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);">21</div>
+          <div class="number" style="background: #4a2b81; border-radius: 8px; padding: 10px; font-weight: bold; box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);">42</div>
+          <div class="number" style="background: #4a2b81; border-radius: 8px; padding: 10px; font-weight: bold; box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);">47</div>
+          <div class="number" style="background: #4a2b81; border-radius: 8px; padding: 10px; font-weight: bold; box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);">61</div>
+  
+          <!-- Fila 3 -->
+          <div class="number" style="background: #4a2b81; border-radius: 8px; padding: 10px; font-weight: bold; box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);">3</div>
+          <div class="number" style="background: #4a2b81; border-radius: 8px; padding: 10px; font-weight: bold; box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);">25</div>
+          <div class="logo-cell" style="background: transparent; border-radius: 8px; padding: 10px; position: relative; display: flex; align-items: center; justify-content: center;">
+            <img src="https://via.placeholder.com/50x50/6d4ead/ffffff?text=LOGO" alt="Logo Bingo" style="width: 25px; height: 25px; border-radius: 8px; object-fit: cover;" />
+          </div>
+          <div class="number" style="background: #4a2b81; border-radius: 8px; padding: 10px; font-weight: bold; box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);">73</div>
+          <div class="number" style="background: #4a2b81; border-radius: 8px; padding: 10px; font-weight: bold; box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);">6</div>
+  
+          <!-- Fila 4 -->
+          <div class="number" style="background: #4a2b81; border-radius: 8px; padding: 10px; font-weight: bold; box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);">18</div>
+          <div class="number" style="background: #4a2b81; border-radius: 8px; padding: 10px; font-weight: bold; box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);">44</div>
+          <div class="number" style="background: #4a2b81; border-radius: 8px; padding: 10px; font-weight: bold; box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);">46</div>
+          <div class="number" style="background: #4a2b81; border-radius: 8px; padding: 10px; font-weight: bold; box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);">72</div>
+          <div class="number" style="background: #4a2b81; border-radius: 8px; padding: 10px; font-weight: bold; box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);">2</div>
+  
+          <!-- Fila 5 -->
+          <div class="number" style="background: #4a2b81; border-radius: 8px; padding: 10px; font-weight: bold; box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);">26</div>
+          <div class="number" style="background: #4a2b81; border-radius: 8px; padding: 10px; font-weight: bold; box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);">40</div>
+          <div class="number" style="background: #4a2b81; border-radius: 8px; padding: 10px; font-weight: bold; box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);">53</div>
+          <div class="number" style="background: #4a2b81; border-radius: 8px; padding: 10px; font-weight: bold; box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);">62</div>
+          <div class="number" style="background: #4a2b81; border-radius: 8px; padding: 10px; font-weight: bold; box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);">15</div>
+        </div>
+        <div class="bingo-button">
+          <button style="background: #00d27f; border: none; color: white; padding: 12px 24px; border-radius: 8px; cursor: pointer; font-weight: bold; width: 100%; font-size: 16px; box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2); transition: all 0.3s ease;">Bingo</button>
+        </div>
+      </div>
+    </div>
+  </div>
+  <script>
+      document.addEventListener('DOMContentLoaded', function() {
+          // Seleccionar solo los números (elementos con clase 'number')
+          const numberCells = document.querySelectorAll('.number');
+          
+          // Agregar evento click a cada celda de número
+          numberCells.forEach(cell => {
+              cell.addEventListener('click', function() {
+                  // Alternar la clase 'selected' al hacer click
+                  this.classList.toggle('selected');
+              });
+          });
+          
+          // Opcional: añadir funcionalidad al botón de Bingo
+          const bingoButton = document.querySelector('.bingo-button button');
+          if (bingoButton) {
+              bingoButton.addEventListener('click', function() {
+                  const selectedNumbers = document.querySelectorAll('.number.selected');
+                  alert(`¡Bingo! Has seleccionado ${selectedNumbers.length} números.`);
+              });
+          }
+      });
+  </script>
