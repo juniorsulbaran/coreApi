@@ -682,9 +682,6 @@ def salasTaquilla():
     ), 200
 
 
-
-
-
 @app.route('/carton', methods=['POST'])
 def carton():
     return jsonify(

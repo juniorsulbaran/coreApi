@@ -83,6 +83,19 @@ function salasBingo() {
   });
 }
 
+function salasTaquill() {
+  var url = '/salasTaquilla';
+  $.ajax({
+    type: "POST",
+    url: url,
+    success: function (response) {
+      $('#container').html(response.html);
+    },
+    error: function (error) {
+      console.error('Error:', error);
+    }
+  });
+}
 
 
 
