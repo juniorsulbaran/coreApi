@@ -84,19 +84,6 @@ function salasBingo() {
 }
 
 
-function salasTaquilla() {
-  var url = '/salasTaquilla';
-  $.ajax({
-    type: "POST",
-    url: url,
-    success: function (response) {
-      $('#container').html(response.html);
-    },
-    error: function (error) {
-      console.error('Error:', error);
-    }
-  });
-}
 
 
 function formCarton() {
