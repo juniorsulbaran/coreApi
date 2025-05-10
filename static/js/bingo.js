@@ -83,7 +83,7 @@ function salasBingo() {
   });
 }
 
-function salasTaquill() {
+function salasTaquilla() {
   var url = '/salasTaquilla';
   $.ajax({
     type: "POST",
@@ -96,7 +96,6 @@ function salasTaquill() {
     }
   });
 }
-
 
 
 function formCarton() {
