@@ -230,10 +230,10 @@ def buscarCartonesPremiarHoraSorteo(horaSorteo):
     mydb.close()
     return result
 
-def buscarCartones(serialcarton):
+def buscarCartones():
     mydb = conectar_base_datos()
     mycursor = mydb.cursor()
-    mycursor.execute("SELECT id,B,I,N,G,O FROM cartones WHERE id = '%s'" % serialcarton)
+    mycursor.execute("SELECT id,B,I,N,G,O FROM cartones")
     result = mycursor.fetchall()
     mydb.close()
     return result
@@ -509,6 +509,27 @@ def listarSalas():
         salas_convertidas.append(sala_convertida)
     
     return salas_convertidas  # Ahora es JSON-serializable
+
+#listamos las salas de la taquilla
+def listarSalasTaquilla():
+    mydb = conectar_base_datos()
+    mycursor = mydb.cursor(dictionary=True)
+    mycursor.execute('SELECT * FROM salas_taquilla')
+    result = mycursor.fetchall()
+    mydb.close()
+    # Convertir Decimal a float antes de retornar
+    salas_convertidas = []
+    for sala in result:
+        sala_convertida = {}
+        for key, value in sala.items():
+            if isinstance(value, Decimal):
+                sala_convertida[key] = float(value)
+            else:
+                sala_convertida[key] = value
+        salas_convertidas.append(sala_convertida)
+    
+    return salas_convertidas  # Ahora es JSON-serializable
+
 
 def convertir_a_json_serializable(datos):
     if isinstance(datos, (Decimal, float)):

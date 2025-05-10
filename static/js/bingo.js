@@ -70,7 +70,7 @@ function listaLetra() {
 }
 
 function salasBingo() {
-  var url = '/salasBingo'; 
+  var url = '/salasBingo';
   $.ajax({
     type: "POST",
     url: url,
@@ -82,9 +82,25 @@ function salasBingo() {
     }
   });
 }
+
+
+function salasTaquilla() {
+  var url = '/salasTaquilla';
+  $.ajax({
+    type: "POST",
+    url: url,
+    success: function (response) {
+      $('#container').html(response.html);
+    },
+    error: function (error) {
+      console.error('Error:', error);
+    }
+  });
+}
+
 
 function formCarton() {
-  var url = '/carton'; 
+  var url = '/carton';
   $.ajax({
     type: "POST",
     url: url,
@@ -98,7 +114,7 @@ function formCarton() {
 }
 
 
-function taquillaBingo(){
+function taquillaBingo() {
   var url = '/taquillaBingo';
   $.ajax({
     type: "POST",
@@ -112,8 +128,10 @@ function taquillaBingo(){
   });
 }
 
+
+
 function listarCartones() {
-  var url = '/listarCartones';
+  const url = '/listarCartones';
 
   Swal.fire({
     title: 'Cargando',
@@ -128,11 +146,20 @@ function listarCartones() {
   $.ajax({
     type: "POST",
     url: url,
-    success: function (response) {
+    dataType: 'json', // Asegura que la respuesta se parsea como JSON
+    success: function(response) {
       Swal.close();
-      $('#container').html(response);
+      
+      // Verifica que la respuesta sea válida
+      if (!response || typeof response !== 'object') {
+        mostrarError('Datos recibidos no válidos');
+        return;
+      }
+      
+      const htmlResponse = generarHTML(response.opcionesJson);
+      $('#container').html(htmlResponse.html);
     },
-    error: function (error) {
+    error: function(error) {
       Swal.fire({
         icon: 'error',
         title: 'Error',
@@ -146,6 +173,70 @@ function listarCartones() {
   return false;
 }
 
+function mostrarError(mensaje) {
+  $('#container').html(`
+    <div class="alert alert-danger">
+      ${mensaje}
+    </div>
+  `);
+}
+
+function generarHTML(data) {
+  // Verifica si data.cartones existe y es un array
+  const cartones = Array.isArray(data.cartones) ? data.cartones : 
+                  Array.isArray(data) ? data : [];
+  
+  if (cartones.length === 0) {
+    return {
+      html: `<div class="alert alert-info">
+        No hay cartones disponibles para mostrar.
+      </div>`
+    };
+  }
+
+  const html = cartones.map(carton => {
+    // Valida la estructura básica del cartón
+    if (!carton || typeof carton !== 'object') {
+      return `<div class="alert alert-warning">
+        Cartón con estructura inválida.
+      </div>`;
+    }
+
+    // Asegura que las columnas existan
+    const columnas = ['B', 'I', 'N', 'G', 'O'];
+    columnas.forEach(col => {
+      carton[col] = Array.isArray(carton[col]) ? carton[col] : Array(5).fill('');
+    });
+
+    return `
+    <div class="row carton-container mb-4">
+      <h4>Cartón #${carton.serial || 'N/A'}</h4>
+      <p>Fecha: ${carton.fecha || 'N/A'} - Hora: ${carton.hora || 'N/A'}</p>
+      <p>Venta: ${carton.venta || 'N/A'}</p>
+      
+      <table class="table table-bordered table-sm">
+        <thead class="thead-dark">
+          <tr>
+            ${columnas.map(col => `<th>${col}</th>`).join('')}
+          </tr>
+        </thead>
+        <tbody>
+          ${Array.from({length: 5}).map((_, i) => `
+            <tr>
+              ${columnas.map(col => `<td>${carton[col][i] !== undefined ? carton[col][i] : ''}</td>`).join('')}
+            </tr>
+          `).join('')}
+        </tbody>
+      </table>
+    </div>
+    <hr>`;
+  }).join('');
+
+  return {
+    html: `<div class="col-md-10">${html}</div>`
+  };
+}
+
 function comprar(serialComprado) {
   // Obtener elementos del DOM
   var modal = document.getElementById('miModal');
@@ -154,7 +245,7 @@ function comprar(serialComprado) {
   $('#serial').val(serialComprado)
   $('#monto1').val('20,00 BS')
   $('#monto').val('20')
-
+  
   modal.style.display = 'block';
 
   // Asociar evento de clic al botón de cerrar
@@ -337,7 +428,7 @@ function formUsuario(valor) {  // Añadí parámetro 'dato' que faltaba
     contentType: 'application/x-www-form-urlencoded; charset=UTF-8',
     dataType: 'html',
     beforeSend: function () {
- 
+
     },
     success: function (response) {
       $('#container').html(response); zcxcz
@@ -475,7 +566,7 @@ function login() {
       if (response.success) {
 
         $('#container').html(response.html);
-        
+
       } else {
         Swal.fire({
           icon: 'error',

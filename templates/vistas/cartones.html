@@ -1,124 +1,43 @@
-<style>
-    /* Estilos para el modal */
-    .modal {
-      display: none; /* Ocultar el modal por defecto */
-      position: fixed; /* Posición fija */
-      z-index: 1; /* Por encima de todo */
-      left: 0;
-      top: 0;
-      width: 100%;
-      height: 100%;
-      overflow: auto; /* Habilitar desplazamiento si es necesario */
-      background-color: rgba(0, 0, 0, 0.5); /* Fondo semitransparente */
-    }
-    
-    .modal-contenido {
-      background-color: #fefefe;
-      margin: 15% auto; /* Centrar vertical y horizontalmente */
-      padding: 20px;
-      border: 1px solid #888;
-      width: 80%;
-    }
-    
-    .cerrar {
-      color: #aaa;
-      float: right;
-      font-size: 28px;
-      font-weight: bold;
-    }
-    
-    .cerrar:hover,
-    .cerrar:focus {
-      color: black;
-      text-decoration: none;
-      cursor: pointer;
-    }
-    
-    .centerBoton {
-      display: flex;
-      align-items: center;
-      justify-content: center;
-    }
-  </style>
-  
-  <div id="container">
-    <div class="col-md-10">
-      {% if opcionesJson %}
-        {% for carton in opcionesJson %}
-          <div class="row carton-container">
-            <h4>Cartón #{{ carton.serial }}</h4>
-            <p>Fecha: {{ carton.fecha }} - Hora: {{ carton.hora }}</p>
-            <p>Venta: {{ carton.venta }}</p>
-            
-            <table class="table table-bordered">
-              <thead>
-                <tr>
-                  <th>B</th>
-                  <th>I</th>
-                  <th>N</th>
-                  <th>G</th>
-                  <th>O</th>
-                </tr>
-              </thead>
-              <tbody>
-                {% for i in range(5) %}
-                  <tr>
-                    <td>{{ carton.B[i] if i < carton.B|length else '' }}</td>
-                    <td>{{ carton.I[i] if i < carton.I|length else '' }}</td>
-                    <td>{{ carton.N[i] if i < carton.N|length else '' }}</td>
-                    <td>{{ carton.G[i] if i < carton.G|length else '' }}</td>
-                    <td>{{ carton.O[i] if i < carton.O|length else '' }}</td>
-                  </tr>
-                {% endfor %}
-              </tbody>
-            </table>
-          </div>
-          <hr>
-        {% endfor %}
-      {% else %}
-        <div class="alert alert-info">
-          No hay cartones disponibles para mostrar.
-        </div>
-      {% endif %}
-    </div>
+<div id="container">
+  <div class="col-md-10">
+    <!-- Los cartones se insertarán aquí dinámicamente mediante JavaScript -->
+    <!-- El contenido será generado por la función renderCartones() -->
   </div>
+</div>
+
+<script>
+  // Obtener elementos del DOM
+  var modaldatos = document.getElementById('pagoMovil')
+  var btnAbrir = document.getElementById('datosPago')
+  var btnCerrar = document.getElementById('cerrarModalPago')
+  var btnHome = document.getElementById('home')
+  var btnListaCartones = document.getElementById('listacartones')
   
-  <script>
-    // Obtener elementos del DOM
-    var modaldatos = document.getElementById('pagoMovil');
-    var btnAbrir = document.getElementById('datosPago');
-    var btnCerrar = document.getElementById('cerrarModalPago');
-    var btnHome = document.getElementById('home');
-    var btnListaCartones = document.getElementById('listacartones');
-    
-    
-    if (btnHome) {
-      // redireccionar al home
-      btnHome.onclick = function() {
-        window.location.href = '/';
-      };
+  if (btnHome) {
+    // redireccionar al home
+    btnHome.onclick = function () {
+      window.location.href = '/'
     }
-    
-    if (btnAbrir && modaldatos) {
-      // Asociar evento de clic al botón de abrir
-      btnAbrir.onclick = function() {
-        modaldatos.style.display = 'block';
-      };
+  }
+  
+  if (btnAbrir && modaldatos) {
+    // Asociar evento de clic al botón de abrir
+    btnAbrir.onclick = function () {
+      modaldatos.style.display = 'block'
     }
-    
-    if (btnCerrar && modaldatos) {
-      // Asociar evento de clic al botón de cerrar
-      btnCerrar.onclick = function() {
-        modaldatos.style.display = 'none';
-      };
+  }
+  
+  if (btnCerrar && modaldatos) {
+    // Asociar evento de clic al botón de cerrar
+    btnCerrar.onclick = function () {
+      modaldatos.style.display = 'none'
     }
-    
-    // Cerrar el modal si el usuario hace clic fuera de él
-    window.onclick = function(event) {
-      if (event.target == modaldatos) {
-        modaldatos.style.display = 'none';
-      }
-    };
-    
-    
-  </script>
+  }
+  
+  // Cerrar el modal si el usuario hace clic fuera de él
+  window.onclick = function (event) {
+    if (event.target == modaldatos) {
+      modaldatos.style.display = 'none'
+    }
+  }
+</script>

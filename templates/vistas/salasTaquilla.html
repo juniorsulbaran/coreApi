@@ -1,0 +1,14 @@
+<div class="balance">Saldo: <strong>$0.00</strong></div>
+<div id="container">
+  <h2>Comprar Cartones</h2>
+  {% for sala in listaSalas %}
+    <div class="bingo-room">
+      <img src="{{ url_for('static', filename='image/lisImg.png') }}" alt="Bingo" />
+      <div class="room-details">
+        <p>Precio: <h3>${{ sala.precio }}</h3></p>
+        <p>Cartones vendidos: {{ sala.cartones_vendidos }}</p>
+      </div>
+      <button onclick="listarCartones()">Entrar</button>
+    </div>
+  {% endfor %}
+</div>

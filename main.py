@@ -664,9 +664,29 @@ def salasBingo():
         listaSalas=listaSalas_serializable,
         html=render_template('vistas/salasBingo.html', listaSalas=listaSalas_serializable)
     ), 200
+
+#salas taquilla para comprar cartones
+#entramos en las salas  
+@app.route('/salasTaquilla', methods=['POST'])
+def salasTaquilla():
+    listaSalas = listarSalasTaquilla()  # Datos crudos (con Decimal, datetime, timedelta)
+    
+    # Convertir todos los campos no serializables
+    listaSalas_serializable = convertir_a_json_serializable(listaSalas)
+    
+    return jsonify(
+        success=True,
+        message='',
+        listaSalas=listaSalas_serializable,
+        html=render_template('vistas/salasTaquilla.html', listaSalas=listaSalas_serializable)
+    ), 200
+
+
+
+
+
 @app.route('/carton', methods=['POST'])
 def carton():
-   
     return jsonify(
         success=True,
         message='',
@@ -1053,22 +1073,30 @@ def listaLetra():
 @app.route('/listarCartones', methods=['POST'])
 def listarCartones():
     #consultar tabla numero unico por si estoy entrando a la sala y hay un sorteo en proceso
-    print('Solicitud de Cartones')
+    print('Solicitud de Cartones 1')
     unico = numerosSorteo() 
     print('numeroUnico', unico)
     
     if unico:
         #cuando existe un sorteo activo
         print('hay sorteo activo: ', unico)
-        return render_template('vistas/sorteoIniciado.html')
+        return jsonify(
+            success=True,
+            message='Inicio de sesión exitoso',
+            opcionesJson='',
+            html=render_template('vistas/cartones.html')
+        ), 200
     else:    
-        print('Solicitud de Cartones')
         sorteoPendiente = sorteopendiente()
         print('sorteo: ', sorteoPendiente)
         
         if not sorteoPendiente:
-            return render_template('vistas/cartones.html', opcionesJson=[])
-            
+            return jsonify(
+                success=True,
+                message='Inicio de sesión exitoso',
+                opcionesJson=[],
+                html=render_template('vistas/cartones.html')
+            ), 200   
         sorteo = sorteoPendiente[0]
         vendidos = 0
         listCartones = buscarSerialCartones(vendidos, sorteo, nowDate)
@@ -1101,11 +1129,16 @@ def listarCartones():
                     'O': cadenas[4]
                 }
                 print('cartones:',opcion)
-                opcionesJson.append(opcion)            
+                opcionesJson.append(opcion) 
+            print(opcionesJson)           
         
-        return render_template('vistas/cartones.html', opcionesJson=opcionesJson)
-    
-    
+        return jsonify(
+            success=True,
+            message='',
+            opcionesJson=opcionesJson,
+            html=render_template('vistas/cartones.html')
+        ), 200
+          
 """GET Consultas"""
 @app.route("/users/<user_id>")
 def get_user(user_id):
@@ -1433,7 +1466,7 @@ def fecha():
 if __name__=="__main__": 
     #app.run(debug=True)
     #socketio.run(app)
-    socketio.run(app,'192.168.101.12',5000)
+    socketio.run(app,'192.168.1.8',5000)
     fechaHora = fecha()
     #socketio.run(app,'10.0.0.3',80)
     #app.run('10.0.0.2', 80, debug=True)
