@@ -1,370 +1,532 @@
 <!DOCTYPE html>
-<html lang="en">
-    <style>
-        /* Estilos para el modal */
-        .modal {
-          display: none; /* Ocultar el modal por defecto */
-          position: fixed; /* Posición fija */
-          z-index: 1; /* Por encima de todo */
-          left: 0;
-          top: 0;
-          width: 100%;
-          height: 100%;
-          overflow: auto; /* Habilitar desplazamiento si es necesario */
-          background-color: rgba(0, 0, 0, 0.5); /* Fondo semitransparente */
-        }
-        
-        .modal-contenido {
-          background-color: #fefefe;
-          margin: 15% auto; /* Centrar vertical y horizontalmente */
-          padding: 20px;
-          border: 1px solid #888;
-          width: 80%;
-        }
-        
-        .cerrar {
-          color: #aaa;
-          float: right;
-          font-size: 28px;
-          font-weight: bold;
-        }
-        
-        .cerrar:hover,
-        .cerrar:focus {
-          color: black;
-          text-decoration: none;
-          cursor: pointer;
-        }
-    
-        .centerBoton {
-            display: flex;
-            align-items: center;
-            justify-content: center;
-        }
-    </style>
+<html lang="es">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Panel de Control - Sorteos</title>
+    <!-- Bootstrap CSS -->
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.0/dist/css/bootstrap.min.css" rel="stylesheet">
-    <title>Back</title>
+    <!-- SweetAlert2 CSS -->
+    <link href="https://cdn.jsdelivr.net/npm/sweetalert2@11.10.8/dist/sweetalert2.min.css" rel="stylesheet">
+    <style>
+      :root {
+        --primary-bg: #1e0f3b;
+        --secondary-bg: #250a48;
+        --accent-color: #4a2b81;
+        --gradient: linear-gradient(45deg, #3f1d6c, #6d4ead);
+        --text-color: white;
+      }
+      
+      body {
+        margin: 0;
+        font-family: Arial, sans-serif;
+        background-color: var(--primary-bg);
+        color: var(--text-color);
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        min-height: 100vh;
+        padding: 20px;
+        box-sizing: border-box;
+        font-size: 14px;
+      }
+      
+      .container {
+        background: var(--secondary-bg);
+        width: 100%;
+        max-width: 340px;
+        padding: 15px;
+        border-radius: 20px;
+        box-shadow: 0 8px 16px rgba(0, 0, 0, 0.3);
+        text-align: center;
+        margin: 10px auto;
+      }
+      
+      h1 {
+        font-size: 1.5rem;
+        margin-bottom: 0.5rem;
+      }
+      
+      h3, h5 {
+        font-size: 1.1rem;
+        margin-bottom: 0.5rem;
+      }
+      
+      .card-body h1,
+      .card-body h5 {
+        word-break: break-word;
+      }
+      
+      .form-control {
+        font-size: 0.9rem;
+        padding: 8px 10px;
+        margin-bottom: 10px;
+      }
+      
+      .btn {
+        padding: 8px 12px;
+        font-size: 0.9rem;
+        width: 100%;
+      }
+      
+      .header {
+        background: var(--gradient);
+        padding: 15px;
+        display: flex;
+        justify-content: flex-end;
+        align-items: center;
+        width: 100%;
+        max-width: 340px;
+        border-radius: 15px;
+        margin: 8px auto;
+        box-sizing: border-box;
+      }
+      
+      .menu-toggle {
+        display: flex;
+        flex-direction: column;
+        justify-content: space-between;
+        width: 24px;
+        height: 18px;
+        cursor: pointer;
+      }
+      
+      .menu-toggle div {
+        width: 100%;
+        height: 3px;
+        background-color: white;
+        border-radius: 3px;
+      }
+      
+      .nav {
+        display: none;
+        flex-direction: column;
+        background: var(--gradient);
+        width: 100%;
+        max-width: 340px;
+        border-radius: 15px;
+        margin: 8px auto;
+        padding: 15px;
+        box-sizing: border-box;
+      }
+      
+      .nav a {
+        color: white;
+        text-decoration: none;
+        padding: 10px;
+        margin: 5px 0;
+        border-radius: 5px;
+        transition: background-color 0.3s;
+      }
+      
+      .nav a:hover {
+        background-color: rgba(255, 255, 255, 0.1);
+      }
+      
+      .date-time {
+        background: var(--accent-color);
+        padding: 6px;
+        border-radius: 10px;
+        margin-bottom: 10px;
+        font-size: 12px;
+      }
+      
+      .buttons {
+        display: flex;
+        justify-content: space-between;
+        gap: 8px;
+      }
+      
+      .contact {
+        margin-top: 15px;
+        font-size: 12px;
+        line-height: 1.5;
+      }
+      
+      .date-time {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        gap: 0.5rem;
+        margin-left: auto;
+        margin-right: auto;
+        width: fit-content;
+      }
+      
+      .texto-pequeño {
+        margin: 0;
+        font-size: 0.8rem;
+      }
+      
+      .modal {
+        display: none;
+        position: fixed;
+        z-index: 1000;
+        left: 0;
+        top: 0;
+        width: 100%;
+        height: 100%;
+        background-color: rgba(0, 0, 0, 0.7);
+      }
+      
+      .modal-contenido {
+        background: var(--accent-color);
+        margin: 15% auto;
+        padding: 20px;
+        border-radius: 15px;
+        width: 80%;
+        max-width: 300px;
+        position: relative;
+      }
+      
+      .cerrar {
+        color: white;
+        position: absolute;
+        top: 10px;
+        right: 15px;
+        font-size: 1.5rem;
+        cursor: pointer;
+      }
+      
+      .card {
+        margin-bottom: 15px;
+        background: var(--accent-color);
+        border-radius: 15px;
+        overflow: hidden;
+      }
+      
+      .card-img-top {
+        width: 100%;
+        border-radius: 10px;
+      }
+      
+      .row-cols-1 > * {
+        padding: 5px;
+      }
+      
+      .g-4 {
+        --bs-gutter-y: 0.5rem;
+        --bs-gutter-x: 0.5rem;
+      }
+    </style>
 </head>
+
 <body>
-    <nav class="navbar navbar-expand-lg navbar-light bg-light">
-        <div class="container-fluid">
-            
-            <img src="{{ url_for('static', filename='image/campesino-min.png') }}"  class="img-fluid" style="max-width: 20%;"alt="...">
-            <a href="/" class="text-decoration-none">
-                <h3 class="text-secondary">AgroBingo</h3>
-            </a>
-            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
-                <span class="navbar-toggler-icon"></span>
-            </button>
-            <div class="collapse navbar-collapse" id="navbarNav">
-                <ul class="navbar-nav">
-                    <li class="nav-item">
-                        <a class="nav-link active" aria-current="page" href="#">Inicio</a>
-                    </li>
-                    <li class="nav-item">
-                        <a class="nav-link" href="#">Ventas</a>
-                    </li>
-                    <li class="nav-item">
-                        <a class="nav-link" href="#">Premios</a>
-                    </li>
-                    <li class="nav-item">
-                        <a class="nav-link" href="#">Premios Pagados</a>
-                    </li>
-                    <li class="nav-item">
-                        <a class="nav-link" href="#">Registrar Agencia</a>
-                    </li>
-                </ul>
-            </div>
-        </div>
-    </nav>
-    <br>
-    <div id="container" class="container"> 
-        <div class="row row-cols-1 row-cols-md-2 row-cols-lg-3 g-4">
-            <div class="col">
-                <div class="card"> 
-                    <div class="card-body">
-                        <h1>Iniciar Sistema</h1>
-                    </div>
-                    <button type="button" id="iniciarSorteos" onclick="iniciarSorteo()" class="btn btn-primary">Inicio</button>
-                </div>
-            </div>
-            <div class="col">
-                <div class="card"> 
-                    <div class="card-body">
-                      <h5>Sorteo Pendiente</h5>
-                      <input type='text' id="horaPendiente" class='form-control' />
-                      <h5>Monto Pote</h5>
-                      <input type='text' id="montoPote" class='form-control' />
-                    </div>
-                    <button type="button" onclick="cambiarHoraSorteo()" class="btn btn-primary">Enviar</button>
-                </div>
-            </div>
-            <div class="col">
-                <div class="card"> 
-                    <div class="card-body">
-                        <h5>Cantidad Cartones</h5>
-                        <input type='text' id="cantidad" class='form-control' />
-                        <h5>Hora Sorteo</h5>
-                        <input type='text' id="horaSorteo" class='form-control' />
-                        <h3 id="cartones"></h3>
-                    </div>
-                    <button type="button" onclick="generarCartones()" class="btn btn-primary">Enviar</button>
-                </div>
-            </div>
-            <div class="col">
-                <div class="card">
-                    <div class="card-body">
-                        <h5 class="card-title">Consultar Premio</h5>
-                        <input type='text' id="sorteoPremio" class='form-control' />
-                        <h3 id="serialganador"></h3>
-                    </div>
-                    <button type="button" id="buscarGanador" onclick="buscarGanador()" class="btn btn-primary">Buscar Ganador</button>
-                </div>
-            </div>
-            <div class="col">
-                <div class="card">
-                    <div class="card-body">
-                        <h5 class="card-title">Enviar Mensaje Sala de Juego</h5>
-                        <input type='text' id="sorteoPremio" class='form-control' />
-                    </div>
-                    <button type="button" onclick="enviarMensaje()" class="btn btn-primary">Enviar</button>
-                </div>
-            </div>
-            <div class="col">
-              <div class="card">
-                  <div class="card-body">
-                      <h5 class="card-title">Ventas</h5>
-                  </div>
-                  <button type="button" onclick="buscarVentas()" class="btn btn-primary">Buscar</button>
-              </div>
+  <header class="header">
+      <div class="menu-toggle" onclick="toggleMenu()">
+        <div></div>
+        <div></div>
+        <div></div>
+      </div>
+  </header>
+  
+  <nav class="nav" id="navMenu">
+    <a href="#">Inicio</a>
+    <a href="#">Juegos</a>
+    <a href="#">Ranking</a>
+    <a href="#">Perfil</a>
+    <a href="#">Cerrar sesión</a>
+  </nav>
+  
+  <div id="container" class="container"> 
+    <div class="row row-cols-1 g-4">
+      <div class="col">
+        <div class="card"> 
+          <div class="card-body">
+            <h1>Iniciar Sistema</h1>
           </div>
-        </div>
-    </div>
-    <div id="pagoMovil" class="modal">
-        <div class="modal-contenido">
-          <span class="cerrar" id="cerrarModalPago">&times;</span>
-          <p><strong>Datos del Pago Movil</strong></p>
-          <img src="{{ url_for('static', filename='image/pagomovil.jpg') }}" class="card-img-top" alt="...">
+          <button type="button" id="iniciarSorteos" onclick="iniciarSorteo()" class="btn btn-primary">Inicio</button>
         </div>
       </div>
-    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.0/dist/js/bootstrap.bundle.min.js"></script>
-    <script src="https://code.jquery.com/jquery-3.6.0.min.js" crossorigin="anonymous"></script>
-    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11.10.8/dist/sweetalert2.all.min.js"></script>
-    <link href="https://cdn.jsdelivr.net/npm/sweetalert2@11.10.8/dist/sweetalert2.min.css" rel="stylesheet">
-    <script src="https://cdn.socket.io/4.5.4/socket.io.min.js"></script>
-</body>
-</html>
-<script>
-    //iniciamos los sorteos
+      
+      <div class="col">
+        <div class="card"> 
+          <div class="card-body">
+            <h5>Sorteo Pendiente</h5>
+            <input type='text' id="horaPendiente" class='form-control' placeholder="HH:MM" />
+            <h5>Monto Pote</h5>
+            <input type='text' id="montoPote" class='form-control' placeholder="Monto en $" />
+          </div>
+          <button type="button" onclick="cambiarHoraSorteo()" class="btn btn-primary">Enviar</button>
+        </div>
+      </div>
+      
+      <div class="col">
+        <div class="card"> 
+          <div class="card-body">
+            <h5>Cantidad de Cartones</h5>
+            <input type="number" id="cantidad" class="form-control" placeholder="Número de cartones" min="1" />
+            
+            <h5 class="mt-3">Hora del Sorteo</h5>
+            <input type="time" id="horaSorteo" class="form-control" placeholder="HH:MM" />
+            
+            <div id="cartones" class="mt-3"></div>
+          </div>
+          <div class="card-footer">
+            <button type="button" onclick="generarCartones()" class="btn btn-primary">Generar Cartones</button>
+          </div>
+        </div>
+      </div>
+      <div class="col">
+        <div class="card">
+          <div class="card-body">
+            <h5 class="card-title">Consultar Premio</h5>
+            <input type='text' id="sorteoPremio" class='form-control' placeholder="ID del sorteo" />
+            <h3 id="serialganador"></h3>
+          </div>
+          <button type="button" id="buscarGanador" onclick="buscarGanador()" class="btn btn-primary">Buscar Ganador</button>
+        </div>
+      </div>
+      <div class="col">
+        <div class="card">
+          <div class="card-body">
+            <h5 class="card-title">Enviar Mensaje Sala de Juego</h5>
+            <input type='text' id="mensajeSala" class='form-control' placeholder="Escribe tu mensaje" />
+          </div>
+          <button type="button" onclick="enviarMensaje()" class="btn btn-primary">Enviar</button>
+        </div>
+      </div>
+      
+      <div class="col">
+        <div class="card">
+          <div class="card-body">
+            <h5 class="card-title">Ventas</h5>
+          </div>
+          <button type="button" onclick="buscarVentas()" class="btn btn-primary">Buscar</button>
+        </div>
+      </div>
+    </div>
+  </div>
+  
+  <div id="pagoMovil" class="modal">
+    <div class="modal-contenido">
+      <span class="cerrar" id="cerrarModalPago">&times;</span>
+      <p><strong>Datos del Pago Móvil</strong></p>
+      <img src="{{ url_for('static', filename='image/pagomovil.jpg') }}" class="card-img-top" alt="Pago Móvil">
+    </div>
+  </div>
+
+  <!-- jQuery -->
+  <script src="https://code.jquery.com/jquery-3.6.0.min.js" crossorigin="anonymous"></script>
+  <!-- Bootstrap JS Bundle with Popper -->
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.0/dist/js/bootstrap.bundle.min.js"></script>
+  <!-- SweetAlert2 -->
+  <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11.10.8/dist/sweetalert2.all.min.js"></script>
+  <!-- Socket.io -->
+  <script src="https://cdn.socket.io/4.5.4/socket.io.min.js"></script>
+
+  <script>
+    // Inicialización de Socket.io
     const socket = io();
-    function iniciarSorteo(){
-        document.getElementById('iniciarSorteos').disabled = true;
-        console.log('iniciarSorteo');
-        socket.emit('iniciarSistema','Sistema Iniciado');
-        $.ajax({
-            beforeSend:function(){
-              let timerInterval
-              Swal.fire({
-                title: '',
-                html: 'Procesando.',
-                timer: 5000,
-                timerProgressBar: true,
-                didOpen: () => {
-                  Swal.showLoading()
-                  timerInterval = setInterval(() => {
-                    const seconds = Math.ceil(Swal.getTimerLeft() / 1000) // Convertir milisegundos a segundos y redondear hacia arriba
-                  }, 1000) // Actualizar cada segundo en lugar de cada 100 milisegundos
-                },
-                willClose: () => {
-                  clearInterval(timerInterval)
-                }  
-            })
-        },
-    })
+    
+    // Función para mostrar/ocultar el menú
+    function toggleMenu() {
+      const navMenu = document.getElementById('navMenu');
+      if (navMenu.style.display === 'flex') {
+        navMenu.style.display = 'none';
+      } else {
+        navMenu.style.display = 'flex';
+      }
+    }
+    
+    // Función para iniciar el sistema de sorteos
+    function iniciarSorteo() {
+      document.getElementById('iniciarSorteos').disabled = true;
+      console.log('iniciarSorteo');
+      socket.emit('iniciarSistema', 'Sistema Iniciado');
+      
+      showLoadingAlert('Iniciando sistema...');
     } 
 
-    function cambiarHoraSorteo(){
-      var horaSorteo = $('#horaPendiente').val() 
-      var montoPote = $('#montoPote').val()
-      socket.emit('horaPendiente', horaSorteo,montoPote)
-      $.ajax({
-        beforeSend:function(){
-          let timerInterval
-          Swal.fire({
-            title: '',
-            html: 'Procesando.',
-            timer: 5000,
-            timerProgressBar: true,
-            didOpen: () => {
-              Swal.showLoading()
-              timerInterval = setInterval(() => {
-                const seconds = Math.ceil(Swal.getTimerLeft() / 1000) // Convertir milisegundos a segundos y redondear hacia arriba
-              }, 1000) // Actualizar cada segundo en lugar de cada 100 milisegundos
-            },
-            willClose: () => {
-              clearInterval(timerInterval)
-            }  
-          })
-        },
-      });
+    // Función para cambiar la hora del sorteo pendiente
+    function cambiarHoraSorteo() {
+      const horaSorteo = $('#horaPendiente').val();
+      const montoPote = $('#montoPote').val();
+      
+      if (!horaSorteo || !montoPote) {
+        showErrorAlert('Debe completar ambos campos');
+        return false;
+      }
+      
+      socket.emit('horaPendiente', horaSorteo, montoPote);
+      showLoadingAlert('Actualizando hora del sorteo...');
       return false; 
     }
 
-    function generarCartones(){
-        url= '/crearCartones'
-        var cantidad = $('#cantidad').val()
-        var hora =  $('#horaSorteo').val()
-        datos = {
-            'cantidad':cantidad,
-            'horaSorteo': hora
-        }
-        $.ajax({
-            type: "POST",
-            url: url,
-            data: datos,
-            beforeSend:function(){
-              let timerInterval
-              Swal.fire({
-                title: '',
-                html: 'Procesando.',
-                timer: 5000,
-                timerProgressBar: true,
-                didOpen: () => {
-                  Swal.showLoading()
-                  timerInterval = setInterval(() => {
-                    const seconds = Math.ceil(Swal.getTimerLeft() / 1000) // Convertir milisegundos a segundos y redondear hacia arriba
-                  }, 1000) // Actualizar cada segundo en lugar de cada 100 milisegundos
-                },
-                willClose: () => {
-                  clearInterval(timerInterval)
-                }  
-              })
-            },
-            success: function(response) {
-              console.log(response)
-              document.getElementById('cartones').innerText = 'Cartones Generados: '+ response['cantidad'];
-            },
-            error: function(error) {
-              console.log(error);
-            }
-        });
-        return false; 
-    }
-    
-    socket.on('horaSorteoPendiente',(msg) =>{
-        console.log(msg)
-        document.getElementById('sorteo').innerText = msg;
-      });
-
-    //buscamos el carton premiado del sorteoPremio
-    function buscarGanador(){
-        var horaSorteo = $('#sorteoPremio').val()
-        datos={
-            'horaSorteo':horaSorteo
-        }
-        url= '/buscarGanador'
-        $.ajax({
-          type: "POST",
-          url: url,
-          data: datos,
-          beforeSend:function(){
-            let timerInterval
-            Swal.fire({
-              title: '',
-              html: 'Procesando.',
-              timer: 5000,
-              timerProgressBar: true,
-              didOpen: () => {
-                Swal.showLoading()
-                timerInterval = setInterval(() => {
-                  const seconds = Math.ceil(Swal.getTimerLeft() / 1000) // Convertir milisegundos a segundos y redondear hacia arriba
-                }, 1000) // Actualizar cada segundo en lugar de cada 100 milisegundos
-              },
-              willClose: () => {
-                clearInterval(timerInterval)
-              }  
-            })
-          },
-          success: function(response) {
-            console.log()
-            document.getElementById('serialganador').innerText = 'Serial Ganador: '+ response['serialGanador'];
-            
-          },
-          error: function(error) {
-            console.log(error);
-          }
+    // Función para generar cartones
+    function generarCartones() {
+      const url = '/crearCartones';
+      const cantidad = $('#cantidad').val();
+      const hora = $('#horaSorteo').val();
       
-        });
-        return false; 
-      
+      if (!cantidad || !hora) {
+        showErrorAlert('Debe completar ambos campos');
+        return false;
       }
-
-    //buscar ventas del dia LottoABC
-    function buscarVentas(){
-      socket.emit('Compra', 'Compra');
-      url= '/ventaBoletoLetra'
+      
+      const datos = {
+        'cantidad': cantidad,
+        'horaSorteo': hora
+      };
+      
       $.ajax({
         type: "POST",
         url: url,
-        beforeSend:function(){
-          let timerInterval
-          Swal.fire({
-            title: '',
-            html: 'Procesando.',
-            timer: 5000,
-            timerProgressBar: true,
-            didOpen: () => {
-              Swal.showLoading()
-              timerInterval = setInterval(() => {
-                const seconds = Math.ceil(Swal.getTimerLeft() / 1000) // Convertir milisegundos a segundos y redondear hacia arriba
-              }, 1000) // Actualizar cada segundo en lugar de cada 100 milisegundos
-            },
-            willClose: () => {
-              clearInterval(timerInterval)
-            }  
-          })
-        },
+        data: datos,
+        beforeSend: showLoadingAlert('Generando cartones...'),
         success: function(response) {
-          console.log()
-          $('#container').html(response)
+          console.log(response);
+          document.getElementById('cartones').innerText = 'Cartones Generados: '+ response['cantidad'];
+          showSuccessAlert('Cartones generados con éxito');
         },
         error: function(error) {
           console.log(error);
+          showErrorAlert('Error al generar cartones');
         }
-    
       });
       return false; 
-    
     }
-    //recibe lista de boletos bendidos
-    socket.on('compraLottoABC',(msg) =>{
+    
+    // Escuchar evento de hora de sorteo pendiente
+    socket.on('horaSorteoPendiente', (msg) => {
+      console.log(msg);
+      document.getElementById('sorteo').innerText = msg;
+    });
+
+    // Función para buscar el ganador
+    function buscarGanador() {
+      const horaSorteo = $('#sorteoPremio').val();
+      
+      if (!horaSorteo) {
+        showErrorAlert('Debe ingresar el ID del sorteo');
+        return false;
+      }
+      
+      const datos = {
+        'horaSorteo': horaSorteo
+      };
+      
+      const url = '/buscarGanador';
+      
+      $.ajax({
+        type: "POST",
+        url: url,
+        data: datos,
+        beforeSend: showLoadingAlert('Buscando ganador...'),
+        success: function(response) {
+          console.log(response);
+          document.getElementById('serialganador').innerText = 'Serial Ganador: '+ response['serialGanador'];
+          showSuccessAlert('Ganador encontrado');
+        },
+        error: function(error) {
+          console.log(error);
+          showErrorAlert('Error al buscar ganador');
+        }
+      });
+      return false; 
+    }
+
+    // Función para buscar ventas
+    function buscarVentas() {
+      socket.emit('Compra', 'Compra');
+      const url = '/ventaBoletoLetra';
+      
+      $.ajax({
+        type: "POST",
+        url: url,
+        beforeSend: showLoadingAlert('Buscando ventas...'),
+        success: function(response) {
+          console.log(response);
+          $('#container').html(response);
+        },
+        error: function(error) {
+          console.log(error);
+          showErrorAlert('Error al buscar ventas');
+        }
+      });
+      return false; 
+    }
+    
+    // Función para enviar mensaje a la sala de juego
+    function enviarMensaje() {
+      const mensaje = $('#mensajeSala').val();
+      
+      if (!mensaje) {
+        showErrorAlert('Debe escribir un mensaje');
+        return false;
+      }
+      
+      socket.emit('mensajeSala', mensaje);
+      showSuccessAlert('Mensaje enviado con éxito');
+      $('#mensajeSala').val('');
+    }
+
+    // Escuchar evento de compra
+    socket.on('compraLottoABC', (msg) => {
       const tablaDatos = document.getElementById('tabla-datos');
-      // Limpiar el contenido de la fila
       tablaDatos.innerHTML = '';
+      
       msg.forEach(dato => {
-          const fila = document.createElement('div');
-          fila.className = 'row'; // Clase para la fila
-
-          // Crear columnas para cada dato
-          for (let key in dato) {
-              const columna = document.createElement('div');
-              columna.className = 'col'; // Clase para la columna
-              columna.textContent = dato[key]; // Asignar el dato a la columna
-              fila.appendChild(columna); // Agregar la columna a la fila
-          }
-
-          tablaDatos.appendChild(fila); // Agregar la fila a la tabla
+        const fila = document.createElement('div');
+        fila.className = 'row';
+        
+        for (let key in dato) {
+          const columna = document.createElement('div');
+          columna.className = 'col';
+          columna.textContent = dato[key];
+          fila.appendChild(columna);
+        }
+        
+        tablaDatos.appendChild(fila);
       });
     });
 
-    // Obtener elementos del DOM
-    var modaldatos = document.getElementById('pagoMovil');
-    var btnAbrir = document.getElementById('datosPago');
-    var btnCerrar = document.getElementById('cerrarModalPago');
-    var btnHome = document.getElementById('home');
-    var btnListaCartones = document.getElementById('listacartones');
+    // Funciones auxiliares para mostrar alertas
+    function showLoadingAlert(message) {
+      Swal.fire({
+        title: 'Procesando',
+        html: message,
+        timer: 5000,
+        timerProgressBar: true,
+        didOpen: () => {
+          Swal.showLoading();
+        }
+      });
+    }
+    
+    function showSuccessAlert(message) {
+      Swal.fire({
+        icon: 'success',
+        title: 'Éxito',
+        text: message,
+        timer: 3000,
+        timerProgressBar: true
+      });
+    }
+    
+    function showErrorAlert(message) {
+      Swal.fire({
+        icon: 'error',
+        title: 'Error',
+        text: message,
+        timer: 3000,
+        timerProgressBar: true
+      });
+    }
 
-</script>
+    // Manejo del modal
+    document.getElementById('cerrarModalPago').addEventListener('click', function() {
+      document.getElementById('pagoMovil').style.display = 'none';
+    });
+    
+    // Cerrar modal al hacer clic fuera del contenido
+    window.addEventListener('click', function(event) {
+      const modal = document.getElementById('pagoMovil');
+      if (event.target === modal) {
+        modal.style.display = 'none';
+      }
+    });
+  </script>
+</body>
+</html>

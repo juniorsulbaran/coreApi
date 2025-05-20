@@ -1463,7 +1463,7 @@ def fecha():
 if __name__=="__main__": 
     #app.run(debug=True)
     #socketio.run(app)
-    socketio.run(app,'192.168.1.8',5000)
+    socketio.run(app,'192.168.101.7',5000)
     fechaHora = fecha()
     #socketio.run(app,'10.0.0.3',80)
     #app.run('10.0.0.2', 80, debug=True)
